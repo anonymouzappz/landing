@@ -11,13 +11,15 @@ import {
   Sparkles,
   CheckCircle2,
   Cpu,
-  LockKeyhole,
-  Loader2,
-  AlertTriangle,
 } from "lucide-react";
-import { useState } from "react";
 
 export default function DownloadPage() {
+  const directDownloadUrl =
+    "https://firebasestorage.googleapis.com/v0/b/remot3forg3.firebasestorage.app/o/installers%2FRemoteForgeCompanion.exe?alt=media";
+
+  /*
+  // KEEP THIS FOR LATER CODE-LOCKED DOWNLOAD
+
   const [code, setCode] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
   const [message, setMessage] = useState("");
@@ -52,6 +54,7 @@ export default function DownloadPage() {
       setLoading(false);
     }
   }
+  */
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#040816] px-5 py-20 text-white">
@@ -74,64 +77,40 @@ export default function DownloadPage() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-sm font-black uppercase tracking-[0.22em] text-cyan-200">
               <Sparkles size={15} />
-              Premium Download Access
+              RemoteForge Download
             </div>
 
             <h1 className="mt-7 text-5xl font-black leading-[0.92] tracking-[-0.06em] md:text-7xl">
-              Unlock the
+              Download the
               <span className="block bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">
                 Windows Companion.
               </span>
             </h1>
 
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
-              Enter your RemoteForge upgrade code to unlock the Windows
-              Companion installer.
+              Install RemoteForge Companion on your Windows PC, then pair it
+              from the Android app using your local IP address and pairing code.
             </p>
 
             <div className="mt-8 rounded-[2rem] border border-cyan-300/10 bg-black/35 p-6 backdrop-blur-2xl">
               <div className="flex items-center gap-3">
-                <LockKeyhole className="text-cyan-300" size={24} />
-                <h2 className="text-2xl font-black">Enter Download Code</h2>
+                <Download className="text-cyan-300" size={24} />
+                <h2 className="text-2xl font-black">Installer Ready</h2>
               </div>
 
-              <input
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
-                placeholder="RF-XXXX-XXXX-2026"
-                className="mt-5 w-full rounded-2xl border border-cyan-300/10 bg-white/[0.04] px-5 py-4 text-lg font-black uppercase tracking-[0.18em] text-white outline-none transition placeholder:text-white/25 focus:border-cyan-300/35"
-              />
+              <p className="mt-4 leading-7 text-white/60">
+                Download access is open during MVP testing. Code-locked
+                downloads can be turned back on later.
+              </p>
 
-              <button
-                onClick={verifyCode}
-                disabled={loading}
-                className="mt-5 inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-500 px-7 py-5 font-black text-black shadow-[0_0_45px_rgba(34,211,238,.35)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+              <a
+                href={directDownloadUrl}
+                download="RemoteForgeCompanion.exe"
+                className="mt-6 inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-500 px-7 py-5 font-black text-black shadow-[0_0_45px_rgba(34,211,238,.35)] transition hover:-translate-y-0.5"
               >
-                {loading ? <Loader2 className="animate-spin" size={22} /> : <ShieldCheck size={22} />}
-                {loading ? "Verifying..." : "Verify Code"}
-              </button>
-
-              {message && (
-                <div className="mt-5 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                  {downloadUrl ? (
-                    <CheckCircle2 className="mt-0.5 text-cyan-300" size={18} />
-                  ) : (
-                    <AlertTriangle className="mt-0.5 text-violet-300" size={18} />
-                  )}
-                  <p className="text-sm leading-6 text-white/65">{message}</p>
-                </div>
-              )}
-
-              {downloadUrl && (
-                <a
-                  href={downloadUrl}
-                  download
-                  className="mt-5 inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-cyan-300/20 bg-cyan-300 px-7 py-5 font-black text-black shadow-[0_0_45px_rgba(34,211,238,.35)] transition hover:-translate-y-0.5"
-                >
-                  <Download size={22} />
-                  Download Windows Companion
-                </a>
-              )}
+                <Download size={22} />
+                Download Windows Companion
+              </a>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -221,12 +200,12 @@ export default function DownloadPage() {
               </div>
 
               <h2 className="mt-4 text-3xl font-black">
-                Verify, download, install, pair.
+                Download, install, open, pair.
               </h2>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-4">
-              {["Verify", "Download", "Install", "Pair"].map((step, index) => (
+              {["Download", "Install", "Open", "Pair"].map((step, index) => (
                 <div
                   key={step}
                   className="rounded-2xl border border-white/5 bg-white/[0.035] px-5 py-4 text-center"
