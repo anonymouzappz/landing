@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://remoteforge.com";
+const siteUrl = "https://landing--remot3forg3.us-east4.hosted.app/";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
