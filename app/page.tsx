@@ -1,6 +1,8 @@
 import DownloadSection from "@/components/sections/DownloadSection";
+import FAQSection from "@/components/sections/FAQSection";
 import HeroSection from "@/components/sections/HeroSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
+import PricingSection from "@/components/sections/PricingSection";
 import SecuritySection from "@/components/sections/SecuritySection";
 import VisionSection from "@/components/sections/VisionSection";
 import Footer from "@/components/ui/Footer";
@@ -40,9 +42,19 @@ export default function HomePage() {
       {/* CONTENT */}
       <div className="relative z-20">
         <VisionSection />
+
         <HowItWorksSection />
+
         <SecuritySection />
+
+        {/* PRICING */}
+        <PricingSection />
+
         <DownloadSection />
+
+        {/* FAQ */}
+        <FAQSection />
+
         <Footer />
       </div>
     </main>
