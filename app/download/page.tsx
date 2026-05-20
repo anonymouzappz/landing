@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 
 export default function DownloadPage() {
-  const directDownloadUrl =
-    "https://firebasestorage.googleapis.com/v0/b/remot3forg3.firebasestorage.app/o/installers%2FRemoteForgeCompanion.exe?alt=media";
+const directDownloadUrl =
+  "https://firebasestorage.googleapis.com/v0/b/remot3forg3.firebasestorage.app/o/installers%2FRemoteForgeCompanionSetup.exe?alt=media";
 
   /*
   // KEEP THIS FOR LATER CODE-LOCKED DOWNLOAD
