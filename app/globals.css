@@ -1,26 +1,217 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --rf-bg: #040816;
+  --rf-panel: #07111f;
+  --rf-cyan: #22d3ee;
+  --rf-blue: #3b82f6;
+  --rf-violet: #8b5cf6;
+  --rf-pink: #d946ef;
+  --rf-orange: #ff6a00;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(34, 211, 238, 0.16), transparent 32%),
+    radial-gradient(circle at 82% 18%, rgba(217, 70, 239, 0.14), transparent 34%),
+    linear-gradient(180deg, #040816 0%, #050816 45%, #02040b 100%);
+  color: white;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.22) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+body::after {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  opacity: 0.08;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 100% 4px;
+  mix-blend-mode: screen;
+}
+
+::selection {
+  background: var(--rf-cyan);
+  color: #02040b;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #02040b;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--rf-cyan), var(--rf-violet), var(--rf-pink));
+}
+
+.rf-glass {
+  border: 1px solid rgba(34, 211, 238, 0.12);
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.45);
+}
+
+.rf-gradient-text {
+  background: linear-gradient(90deg, var(--rf-cyan), var(--rf-blue), var(--rf-violet), var(--rf-pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.rf-neon-border {
+  position: relative;
+}
+
+.rf-neon-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--rf-cyan), var(--rf-violet), var(--rf-pink));
+  opacity: 0.65;
+  filter: blur(10px);
+}
+
+.rf-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.32;
+  animation: rf-float 8s ease-in-out infinite;
+}
+
+.rf-orb-cyan {
+  background: var(--rf-cyan);
+}
+
+.rf-orb-violet {
+  background: var(--rf-violet);
+  animation-delay: -3s;
+}
+
+.rf-animated-grid {
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.08) 1px, transparent 1px);
+  background-size: 90px 90px;
+  animation: rf-grid-move 18s linear infinite;
+}
+
+.rf-glow-button {
+  box-shadow:
+    0 0 24px rgba(34, 211, 238, 0.38),
+    0 0 70px rgba(139, 92, 246, 0.25);
+}
+
+.rf-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.rf-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: -80% -40%;
+  background: linear-gradient(
+    120deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 65%
+  );
+  transform: translateX(-60%) rotate(12deg);
+  animation: rf-shimmer 3.8s ease-in-out infinite;
+}
+
+.rf-scanline {
+  position: relative;
+  overflow: hidden;
+}
+
+.rf-scanline::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: -20%;
+  height: 18%;
+  background: linear-gradient(to bottom, transparent, rgba(34, 211, 238, 0.18), transparent);
+  animation: rf-scan 4.5s linear infinite;
+}
+
+@keyframes rf-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(18px, -24px, 0) scale(1.08);
+  }
+}
+
+@keyframes rf-grid-move {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 90px 90px;
+  }
+}
+
+@keyframes rf-shimmer {
+  0% {
+    transform: translateX(-70%) rotate(12deg);
+  }
+
+  45%,
+  100% {
+    transform: translateX(70%) rotate(12deg);
+  }
+}
+
+@keyframes rf-scan {
+  from {
+    top: -20%;
+  }
+
+  to {
+    top: 120%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
