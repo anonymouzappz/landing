@@ -8,6 +8,7 @@ import {
   Settings,
   ShieldCheck,
   Users,
+  RefreshCw,
 } from "lucide-react";
 
 const nav = [
@@ -17,6 +18,7 @@ const nav = [
   { label: "Companion", href: "/admin/companion", icon: Download },
   { label: "Announcements", href: "/admin/announcements", icon: Megaphone },
   { label: "Support", href: "/admin/support", icon: Bell },
+  { label: "Android Update", href: "/admin/android-update", icon: RefreshCw },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
