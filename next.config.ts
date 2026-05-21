@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
     "169.254.153.109",
     "localhost",
     "127.0.0.1",
+    "192.168.135.1",
   ],
 
   images: {
