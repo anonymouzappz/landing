@@ -2,8 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Cpu, Download, Menu, ShieldCheck, Sparkles, X } from "lucide-react";
+import {
+  Cpu,
+  Download,
+  Menu,
+  PlayCircle,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
+
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.anonymouzappz.remoteforge";
 
 const navItems = [
   { label: "Vision", href: "#vision" },
@@ -38,14 +49,24 @@ export default function NavBar() {
 
     if (item.href.startsWith("#")) {
       return (
-        <a key={item.label} href={item.href} onClick={closeMenu} className={className}>
+        <a
+          key={item.label}
+          href={item.href}
+          onClick={closeMenu}
+          className={className}
+        >
           {item.label}
         </a>
       );
     }
 
     return (
-      <Link key={item.label} href={item.href} onClick={closeMenu} className={className}>
+      <Link
+        key={item.label}
+        href={item.href}
+        onClick={closeMenu}
+        className={className}
+      >
         {item.label}
       </Link>
     );
@@ -65,6 +86,7 @@ export default function NavBar() {
         <Link href="/" className="group flex min-w-0 items-center gap-3">
           <div className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-cyan-300/15 bg-black/40 shadow-[0_0_35px_rgba(34,211,238,.18)]">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 via-transparent to-violet-500/25" />
+
             <Image
               src="/logo.png"
               alt="RemoteForge Logo"
@@ -101,6 +123,16 @@ export default function NavBar() {
           </div>
 
           <a
+            href={PLAY_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden items-center gap-2 rounded-2xl border border-cyan-300/15 bg-cyan-300/10 px-4 py-3 text-sm font-black text-cyan-200 transition hover:border-cyan-300/30 hover:bg-cyan-300/15 xl:inline-flex"
+          >
+            <PlayCircle size={17} />
+            Android Test
+          </a>
+
+          <a
             href="#download"
             className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-500 px-5 py-3 text-sm font-black text-black shadow-[0_0_35px_rgba(34,211,238,.35)] transition hover:-translate-y-0.5"
           >
@@ -121,16 +153,29 @@ export default function NavBar() {
 
       <div
         className={`relative overflow-hidden border-t border-cyan-300/10 bg-[#030712]/95 backdrop-blur-2xl transition-all duration-500 lg:hidden ${
-          open ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0"
+          open ? "max-h-[820px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="px-5 pb-6 pt-3">
-          <div className="grid gap-2">{navItems.map((item) => renderNavItem(item, true))}</div>
+          <div className="grid gap-2">
+            {navItems.map((item) => renderNavItem(item, true))}
+          </div>
+
+          <a
+            href={PLAY_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={closeMenu}
+            className="mt-4 flex items-center justify-center gap-2 rounded-2xl border border-cyan-300/15 bg-cyan-300/10 px-5 py-4 text-sm font-black text-cyan-200"
+          >
+            <PlayCircle size={17} />
+            Join Android Test
+          </a>
 
           <a
             href="#download"
             onClick={closeMenu}
-            className="mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-500 px-5 py-4 text-sm font-black text-black shadow-[0_0_35px_rgba(34,211,238,.35)]"
+            className="mt-3 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-500 px-5 py-4 text-sm font-black text-black shadow-[0_0_35px_rgba(34,211,238,.35)]"
           >
             <Download size={17} />
             Download RemoteForge
