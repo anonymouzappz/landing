@@ -15,7 +15,7 @@ import {
 
 export default function DownloadPage() {
 const directDownloadUrl =
-  "gs://remot3forg3.firebasestorage.app/installers/RemoteForgeCompanionSetup.exe";
+  "https://firebasestorage.googleapis.com/v0/b/remot3forg3.firebasestorage.app/o/installers%2FRemoteForgeCompanionSetup.exe?alt=media&token=b8952110-0bfa-4d9b-874f-e975765490e9";
 
   /*
   // KEEP THIS FOR LATER CODE-LOCKED DOWNLOAD
