@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Users,
   RefreshCw,
+  Menu,
 } from "lucide-react";
 
 const nav = [
@@ -24,15 +25,16 @@ const nav = [
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="min-h-screen bg-[#02030a] text-white">
+    <main className="min-h-screen overflow-x-hidden bg-[#02030a] text-white">
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,.16),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,.16),transparent_40%)]" />
 
       <div className="flex min-h-screen">
-        <aside className="hidden w-72 border-r border-white/10 bg-white/[0.035] p-5 backdrop-blur-xl lg:block">
+        <aside className="hidden w-72 shrink-0 border-r border-white/10 bg-white/[0.035] p-5 backdrop-blur-xl lg:block">
           <div className="mb-8">
             <p className="text-2xl font-black">
               Remote<span className="text-cyan-300">Forge</span>
             </p>
+
             <p className="mt-1 text-xs font-bold uppercase tracking-[0.25em] text-white/40">
               Admin Panel
             </p>
@@ -46,10 +48,10 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.03] px-4 py-3 text-sm font-bold text-white/70 transition hover:border-cyan-300/25 hover:bg-cyan-300/10 hover:text-cyan-200"
+                  className="flex min-w-0 items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.03] px-4 py-3 text-sm font-bold text-white/70 transition hover:border-cyan-300/25 hover:bg-cyan-300/10 hover:text-cyan-200"
                 >
-                  <Icon size={18} />
-                  {item.label}
+                  <Icon className="shrink-0" size={18} />
+                  <span className="truncate">{item.label}</span>
                 </Link>
               );
             })}
@@ -60,13 +62,53 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               <ShieldCheck size={17} />
               Owner Access
             </div>
+
             <p className="mt-2 text-xs font-semibold leading-5 text-white/45">
               This dashboard is locked to your Firebase admin UID only.
             </p>
           </div>
         </aside>
 
-        <section className="flex-1 p-5 lg:p-8">{children}</section>
+        <section className="flex min-w-0 flex-1 flex-col">
+          <header className="sticky top-0 z-40 border-b border-white/10 bg-[#02030a]/85 px-4 py-4 backdrop-blur-xl lg:hidden">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="truncate text-xl font-black">
+                  Remote<span className="text-cyan-300">Forge</span>
+                </p>
+
+                <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/40">
+                  Admin Panel
+                </p>
+              </div>
+
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10">
+                <Menu className="text-cyan-300" size={22} />
+              </div>
+            </div>
+
+            <nav className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {nav.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="flex shrink-0 items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3 text-xs font-black text-white/70 transition hover:border-cyan-300/25 hover:bg-cyan-300/10 hover:text-cyan-200"
+                  >
+                    <Icon className="shrink-0" size={16} />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </header>
+
+          <div className="w-full min-w-0 flex-1 p-4 sm:p-5 lg:p-8">
+            {children}
+          </div>
+        </section>
       </div>
     </main>
   );
