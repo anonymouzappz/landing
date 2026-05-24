@@ -8,6 +8,8 @@ import {
   ShieldCheck,
   RadioTower,
   Cpu,
+  Flame,
+  MonitorSmartphone,
 } from "lucide-react";
 
 const steps = [
@@ -21,6 +23,17 @@ const steps = [
       "Send navigation and playback commands",
     ],
     glow: "from-cyan-400/20 to-blue-500/10",
+  },
+  {
+    Icon: Flame,
+    title: "Fire TV Control",
+    text: "Fire TV can connect two ways: directly through Fire TV ADB or through the RemoteForge Windows Companion using ADB tools.",
+    bullets: [
+      "Direct Fire TV ADB connection over local WiFi",
+      "Windows Companion ADB connection for advanced setup",
+      "Clear setup options for different Fire TV devices",
+    ],
+    glow: "from-orange-400/20 to-red-500/10",
   },
   {
     Icon: Computer,
@@ -61,9 +74,8 @@ export default function HowItWorksSection() {
   return (
     <section
       id="how"
-      className="relative overflow-hidden bg-[#040816] px-5 py-28"
+      className="relative overflow-hidden bg-[#040816] px-5 py-20 sm:py-24 lg:py-28"
     >
-      {/* BACKGROUND */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,.12),transparent_30%),radial-gradient(circle_at_80%_75%,rgba(168,85,247,.14),transparent_36%)]" />
 
       <div className="absolute inset-0 opacity-[0.03]">
@@ -71,15 +83,14 @@ export default function HowItWorksSection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        {/* HEADER */}
-        <div className="grid gap-14 lg:grid-cols-[.85fr_1.15fr]">
+        <div className="grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:gap-14">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-sm font-black uppercase tracking-[0.22em] text-cyan-200 backdrop-blur-xl">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-cyan-200 backdrop-blur-xl sm:text-sm sm:tracking-[0.22em]">
               <Sparkles size={15} />
               How RemoteForge Works
             </div>
 
-            <h2 className="mt-7 text-5xl font-black leading-[0.92] tracking-[-0.06em] text-white md:text-7xl">
+            <h2 className="mt-7 text-4xl font-black leading-[0.95] tracking-[-0.05em] text-white sm:text-5xl md:text-7xl">
               Fast pairing.
               <span className="block bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">
                 Instant control.
@@ -87,20 +98,20 @@ export default function HowItWorksSection() {
             </h2>
           </div>
 
-          <div className="relative overflow-hidden rounded-[2rem] border border-cyan-300/10 bg-white/[0.03] p-8 backdrop-blur-2xl">
+          <div className="relative overflow-hidden rounded-[2rem] border border-cyan-300/10 bg-white/[0.03] p-5 backdrop-blur-2xl sm:p-8">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-transparent to-violet-500/10" />
 
             <div className="relative">
-              <p className="text-lg leading-8 text-white/70">
+              <p className="text-base leading-7 text-white/70 sm:text-lg sm:leading-8">
                 RemoteForge uses local WiFi communication to discover compatible
                 devices, securely pair with them, and send low-latency commands
                 directly from your Android phone.
               </p>
 
-              <p className="mt-5 text-lg leading-8 text-white/50">
-                The MVP focuses on Roku TV control and Windows Companion support,
-                then expands into smart-home screens, AI macros, automation
-                routines, and future universal device integrations.
+              <p className="mt-5 text-base leading-7 text-white/50 sm:text-lg sm:leading-8">
+                Fire TV control supports two connection paths: direct Fire TV
+                ADB over WiFi, or Windows Companion ADB for users who want a
+                desktop-assisted setup.
               </p>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -114,21 +125,21 @@ export default function HowItWorksSection() {
                     label: "Secure Pairing",
                   },
                   {
-                    Icon: RadioTower,
-                    label: "Low-Latency Commands",
+                    Icon: Flame,
+                    label: "Fire TV ADB Support",
                   },
                   {
                     Icon: Cpu,
-                    label: "Future AI Automation",
+                    label: "Companion ADB Tools",
                   },
                 ].map(({ Icon, label }) => (
                   <div
                     key={label}
-                    className="flex items-center gap-3 rounded-2xl border border-cyan-300/10 bg-black/30 px-4 py-4"
+                    className="flex min-w-0 items-center gap-3 rounded-2xl border border-cyan-300/10 bg-black/30 px-4 py-4"
                   >
-                    <Icon className="text-cyan-300" size={20} />
+                    <Icon className="shrink-0 text-cyan-300" size={20} />
 
-                    <span className="text-sm font-bold text-white/75">
+                    <span className="min-w-0 text-sm font-bold text-white/75">
                       {label}
                     </span>
                   </div>
@@ -138,27 +149,93 @@ export default function HowItWorksSection() {
           </div>
         </div>
 
-        {/* MAIN GRID */}
-        <div className="mt-16 grid gap-6 xl:grid-cols-2">
+        <div className="mt-12 rounded-[2rem] border border-orange-400/20 bg-orange-400/10 p-5 backdrop-blur-xl sm:mt-16 sm:p-7">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-orange-300/20 bg-orange-400/15">
+              <Flame className="text-orange-300" size={26} />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-orange-200">
+                Fire TV Connection Options
+              </p>
+
+              <h3 className="mt-3 text-2xl font-black text-white sm:text-3xl">
+                Fire TV has 2 ways to connect
+              </h3>
+
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
+                RemoteForge gives users a clear choice depending on their setup:
+                connect directly to the Fire TV with ADB, or connect through the
+                Windows Companion when they want desktop-assisted ADB control.
+              </p>
+
+              <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+                  <div className="flex items-center gap-3">
+                    <Tv className="shrink-0 text-orange-300" size={24} />
+                    <p className="font-black text-white">Direct Fire TV ADB</p>
+                  </div>
+
+                  <p className="mt-3 text-sm leading-6 text-white/60">
+                    Connect straight to your Fire TV over your local network
+                    using the Fire TV device IP and ADB developer mode.
+                  </p>
+
+                  <div className="mt-4 space-y-2 text-sm text-white/50">
+                    <p>• No Windows PC required</p>
+                    <p>• Uses Fire TV developer ADB mode</p>
+                    <p>• Best for quick remote control setup</p>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+                  <div className="flex items-center gap-3">
+                    <MonitorSmartphone
+                      className="shrink-0 text-violet-300"
+                      size={24}
+                    />
+                    <p className="font-black text-white">
+                      Windows Companion ADB
+                    </p>
+                  </div>
+
+                  <p className="mt-3 text-sm leading-6 text-white/60">
+                    Use the RemoteForge Windows Companion as the bridge for ADB
+                    tools, advanced commands, setup help, and stronger desktop
+                    control.
+                  </p>
+
+                  <div className="mt-4 space-y-2 text-sm text-white/50">
+                    <p>• Uses the Windows Companion app</p>
+                    <p>• Helpful for advanced ADB control</p>
+                    <p>• Best for power users and desktop-assisted setup</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+                <div className="mt-16 grid gap-6 lg:grid-cols-2">
           {steps.map(({ Icon, title, text, bullets, glow }) => (
             <div
               key={title}
-              className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-cyan-300/20"
+              className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-cyan-300/20 sm:p-8"
             >
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${glow} opacity-0 transition duration-500 group-hover:opacity-100`}
               />
 
               <div className="relative">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-300/15 bg-black/35 shadow-[0_0_35px_rgba(34,211,238,.16)]">
-                  <Icon className="text-cyan-300" size={30} />
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-300/15 bg-black/35 shadow-[0_0_35px_rgba(34,211,238,.16)] sm:h-16 sm:w-16">
+                  <Icon className="text-cyan-300" size={28} />
                 </div>
 
-                <h3 className="mt-6 text-3xl font-black text-white">
+                <h3 className="mt-6 text-2xl font-black text-white sm:text-3xl">
                   {title}
                 </h3>
 
-                <p className="mt-4 text-base leading-8 text-white/60">
+                <p className="mt-4 text-sm leading-7 text-white/60 sm:text-base sm:leading-8">
                   {text}
                 </p>
 
@@ -168,7 +245,7 @@ export default function HowItWorksSection() {
                       key={item}
                       className="flex items-start gap-3 rounded-2xl border border-white/5 bg-black/25 px-4 py-4"
                     >
-                      <div className="mt-1 h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,.9)]" />
+                      <div className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,.9)]" />
 
                       <p className="text-sm leading-6 text-white/70">
                         {item}
@@ -186,25 +263,23 @@ export default function HowItWorksSection() {
           ))}
         </div>
 
-        {/* BOTTOM FLOW */}
-        <div className="mt-16 rounded-[2.5rem] border border-cyan-300/10 bg-black/30 p-8 backdrop-blur-2xl">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mt-16 rounded-[2rem] border border-cyan-300/10 bg-black/30 p-5 backdrop-blur-2xl sm:rounded-[2.5rem] sm:p-8">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {[
               "Discover Devices",
+              "Choose Fire TV Method",
               "Secure Pairing",
               "Control Screens",
-              "Future AI Automation",
             ].map((step, index) => (
-              <div
-                key={step}
-                className="flex flex-1 items-center gap-5"
-              >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 to-violet-500 text-lg font-black text-black shadow-[0_0_30px_rgba(34,211,238,.35)]">
+              <div key={step} className="flex min-w-0 items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 to-violet-500 text-base font-black text-black shadow-[0_0_30px_rgba(34,211,238,.35)] sm:h-14 sm:w-14 sm:text-lg">
                   0{index + 1}
                 </div>
 
-                <div>
-                  <p className="text-lg font-black text-white">{step}</p>
+                <div className="min-w-0">
+                  <p className="text-base font-black text-white sm:text-lg">
+                    {step}
+                  </p>
 
                   <p className="mt-1 text-sm text-white/50">
                     RemoteForge connected ecosystem

@@ -3,16 +3,13 @@ import { adminAuth } from "@/src/lib/firebase-admin";
 
 export async function POST(req: Request) {
   try {
-    const { token } = await req.json();
+    const { token, rememberMe } = await req.json();
 
     if (!token || typeof token !== "string") {
-      return NextResponse.json(
-        { error: "Missing token" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Missing token" }, { status: 400 });
     }
 
-    const decoded = await adminAuth.verifyIdToken(token);
+    const decoded = await adminAuth.verifyIdToken(token, true);
 
     const allowedAdmins = (process.env.ADMIN_UIDS || "")
       .split(",")
@@ -20,11 +17,12 @@ export async function POST(req: Request) {
       .filter(Boolean);
 
     if (!allowedAdmins.includes(decoded.uid)) {
-      return NextResponse.json(
-        { error: "Not authorized" },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
     }
+
+    const maxAge = rememberMe
+      ? 60 * 60 * 24 * 30 // 30 days
+      : 60 * 60 * 8; // 8 hours
 
     const res = NextResponse.json({ ok: true });
 
@@ -33,14 +31,11 @@ export async function POST(req: Request) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge,
     });
 
     return res;
   } catch {
-    return NextResponse.json(
-      { error: "Invalid token" },
-      { status: 401 },
-    );
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 }
