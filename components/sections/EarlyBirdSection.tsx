@@ -12,6 +12,9 @@ import {
   Zap,
 } from "lucide-react";
 
+const checkoutEnabled =
+  process.env.NEXT_PUBLIC_EARLY_BIRD_CHECKOUT_ENABLED === "true";
+
 const plans = [
   {
     name: "Monthly",
@@ -123,6 +126,24 @@ export default function EarlyBirdSection() {
             restore code by email that can be redeemed inside the Android app.
           </p>
 
+          {!checkoutEnabled ? (
+            <div className="mx-auto mt-8 max-w-3xl rounded-[1.5rem] border border-amber-300/25 bg-amber-300/10 p-5 text-left shadow-2xl shadow-black/25 backdrop-blur-xl">
+              <div className="flex items-start gap-3">
+                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-amber-200" />
+                <div>
+                  <h3 className="font-black text-amber-100">
+                    Checkout temporarily paused
+                  </h3>
+                  <p className="mt-1 text-sm font-semibold leading-6 text-amber-100/70">
+                    Early-bird pricing is ready, but payments are paused while
+                    Stripe finishes approving live card payments. Check back
+                    soon.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           <div className="mt-8 inline-flex flex-wrap items-center justify-center gap-3 rounded-[1.5rem] border border-cyan-300/15 bg-white/[0.045] p-3 shadow-2xl shadow-black/30 backdrop-blur-xl">
             <Badge text="Monthly $1.99" />
             <Badge text="Yearly $9.99" />
@@ -188,21 +209,36 @@ export default function EarlyBirdSection() {
                   ))}
                 </ul>
 
-                <a
-                  href={plan.checkoutHref}
-                  className={[
-                    "group mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-black transition hover:-translate-y-0.5",
-                    plan.featured
-                      ? "bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-white shadow-[0_0_35px_rgba(34,211,238,.25)]"
-                      : "border border-white/10 bg-white/10 text-white hover:bg-white/15",
-                  ].join(" ")}
-                >
-                  Claim Early Bird
-                  <ArrowRight
-                    size={17}
-                    className="transition group-hover:translate-x-1"
-                  />
-                </a>
+                {checkoutEnabled ? (
+                  <a
+                    href={plan.checkoutHref}
+                    className={[
+                      "group mt-7 flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-black transition hover:-translate-y-0.5",
+                      plan.featured
+                        ? "bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-white shadow-[0_0_35px_rgba(34,211,238,.25)]"
+                        : "border border-white/10 bg-white/10 text-white hover:bg-white/15",
+                    ].join(" ")}
+                  >
+                    Claim Early Bird
+                    <ArrowRight
+                      size={17}
+                      className="transition group-hover:translate-x-1"
+                    />
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    disabled
+                    className={[
+                      "mt-7 flex h-12 w-full cursor-not-allowed items-center justify-center gap-2 rounded-2xl text-sm font-black opacity-70",
+                      plan.featured
+                        ? "bg-gradient-to-r from-cyan-400/60 to-fuchsia-500/60 text-white"
+                        : "border border-white/10 bg-white/10 text-white",
+                    ].join(" ")}
+                  >
+                    Payments Pending Approval
+                  </button>
+                )}
               </div>
             );
           })}
