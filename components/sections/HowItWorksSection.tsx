@@ -1,50 +1,72 @@
 import {
   Computer,
+  Flame,
+  Home,
   KeyRound,
   MousePointer2,
-  Tv,
-  Sparkles,
-  Wifi,
-  ShieldCheck,
+  QrCode,
   RadioTower,
-  Cpu,
-  Flame,
-  MonitorSmartphone,
+  ShieldCheck,
+  Sparkles,
+  Tv,
+  Wifi,
 } from "lucide-react";
 
 const steps = [
   {
     Icon: Tv,
-    title: "Roku TV Discovery",
-    text: "RemoteForge scans your WiFi network for Roku TVs using fast local discovery and automatically loads device information.",
+    title: "TV Discovery",
+    text: "RemoteForge scans your local network for Roku, Android TV, Google TV, and compatible smart TV devices.",
     bullets: [
-      "Auto-detect Roku devices on local WiFi",
-      "Load device name, model, IP, and software",
-      "Send navigation and playback commands",
+      "Auto-detect supported devices on local WiFi",
+      "Load friendly names, IP addresses, and ports",
+      "Send remote commands through supported local protocols",
     ],
     glow: "from-cyan-400/20 to-blue-500/10",
   },
   {
     Icon: Flame,
-    title: "Fire TV Control",
-    text: "Fire TV can connect two ways: directly through Fire TV ADB or through the RemoteForge Windows Companion using ADB tools.",
+    title: "Fire TV Setup",
+    text: "Fire TV can connect through direct ADB setup or through the RemoteForge Windows Companion for a more stable bridge.",
     bullets: [
       "Direct Fire TV ADB connection over local WiFi",
-      "Windows Companion ADB connection for advanced setup",
-      "Clear setup options for different Fire TV devices",
+      "Windows Companion bridge option",
+      "Clear ADB status and setup prompts",
     ],
     glow: "from-orange-400/20 to-red-500/10",
   },
   {
     Icon: Computer,
     title: "Windows Companion",
-    text: "The Windows Companion securely pairs your Android device to your PC using a local pairing system.",
+    text: "The Windows Companion securely pairs your Android device to your PC using local IP and pairing code setup.",
     bullets: [
       "Connect using local IP + pairing code",
-      "Control media, apps, and desktop actions",
+      "Touchpad, keyboard, media, and controller tools",
       "Secure pairing before device access",
     ],
     glow: "from-violet-500/20 to-fuchsia-500/10",
+  },
+  {
+    Icon: Home,
+    title: "Home Assistant Remote",
+    text: "Connect your Home Assistant bridge and control smart-home entities from one RemoteForge remote screen.",
+    bullets: [
+      "Lights, plugs, switches, and fans",
+      "Thermostats, speakers, scenes, and scripts",
+      "Sensors and smart-home status in one place",
+    ],
+    glow: "from-emerald-400/20 to-cyan-500/10",
+  },
+  {
+    Icon: QrCode,
+    title: "Matter Setup",
+    text: "Matter Direct Control preparation adds QR scanning, manual setup code entry, and native Android channel support.",
+    bullets: [
+      "Scan Matter QR codes",
+      "Paste manual setup codes",
+      "Prepare devices for direct Matter remote control",
+    ],
+    glow: "from-fuchsia-500/20 to-violet-500/10",
   },
   {
     Icon: MousePointer2,
@@ -96,194 +118,58 @@ export default function HowItWorksSection() {
                 Instant control.
               </span>
             </h2>
-          </div>
 
-          <div className="relative overflow-hidden rounded-[2rem] border border-cyan-300/10 bg-white/[0.03] p-5 backdrop-blur-2xl sm:p-8">
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-transparent to-violet-500/10" />
+            <p className="mt-6 max-w-xl text-base leading-7 text-white/55 sm:text-lg sm:leading-8">
+              RemoteForge connects your phone to TVs, PCs, smart-home bridges,
+              and Matter-ready devices through a clean remote experience.
+            </p>
 
-            <div className="relative">
-              <p className="text-base leading-7 text-white/70 sm:text-lg sm:leading-8">
-                RemoteForge uses local WiFi communication to discover compatible
-                devices, securely pair with them, and send low-latency commands
-                directly from your Android phone.
-              </p>
-
-              <p className="mt-5 text-base leading-7 text-white/50 sm:text-lg sm:leading-8">
-                Fire TV control supports two connection paths: direct Fire TV
-                ADB over WiFi, or Windows Companion ADB for users who want a
-                desktop-assisted setup.
-              </p>
-
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                {[
-                  {
-                    Icon: Wifi,
-                    label: "Local WiFi Discovery",
-                  },
-                  {
-                    Icon: ShieldCheck,
-                    label: "Secure Pairing",
-                  },
-                  {
-                    Icon: Flame,
-                    label: "Fire TV ADB Support",
-                  },
-                  {
-                    Icon: Cpu,
-                    label: "Companion ADB Tools",
-                  },
-                ].map(({ Icon, label }) => (
-                  <div
-                    key={label}
-                    className="flex min-w-0 items-center gap-3 rounded-2xl border border-cyan-300/10 bg-black/30 px-4 py-4"
-                  >
-                    <Icon className="shrink-0 text-cyan-300" size={20} />
-
-                    <span className="min-w-0 text-sm font-bold text-white/75">
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <MiniStat icon={Wifi} label="Local WiFi" />
+              <MiniStat icon={ShieldCheck} label="Secure Pairing" />
+              <MiniStat icon={Home} label="Smart Home" />
+              <MiniStat icon={RadioTower} label="Matter Ready" />
             </div>
           </div>
-        </div>
 
-        <div className="mt-12 rounded-[2rem] border border-orange-400/20 bg-orange-400/10 p-5 backdrop-blur-xl sm:mt-16 sm:p-7">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-orange-300/20 bg-orange-400/15">
-              <Flame className="text-orange-300" size={26} />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-black uppercase tracking-[0.22em] text-orange-200">
-                Fire TV Connection Options
-              </p>
-
-              <h3 className="mt-3 text-2xl font-black text-white sm:text-3xl">
-                Fire TV has 2 ways to connect
-              </h3>
-
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
-                RemoteForge gives users a clear choice depending on their setup:
-                connect directly to the Fire TV with ADB, or connect through the
-                Windows Companion when they want desktop-assisted ADB control.
-              </p>
-
-              <div className="mt-6 grid gap-4 lg:grid-cols-2">
-                <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
-                  <div className="flex items-center gap-3">
-                    <Tv className="shrink-0 text-orange-300" size={24} />
-                    <p className="font-black text-white">Direct Fire TV ADB</p>
-                  </div>
-
-                  <p className="mt-3 text-sm leading-6 text-white/60">
-                    Connect straight to your Fire TV over your local network
-                    using the Fire TV device IP and ADB developer mode.
-                  </p>
-
-                  <div className="mt-4 space-y-2 text-sm text-white/50">
-                    <p>• No Windows PC required</p>
-                    <p>• Uses Fire TV developer ADB mode</p>
-                    <p>• Best for quick remote control setup</p>
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
-                  <div className="flex items-center gap-3">
-                    <MonitorSmartphone
-                      className="shrink-0 text-violet-300"
-                      size={24}
-                    />
-                    <p className="font-black text-white">
-                      Windows Companion ADB
-                    </p>
-                  </div>
-
-                  <p className="mt-3 text-sm leading-6 text-white/60">
-                    Use the RemoteForge Windows Companion as the bridge for ADB
-                    tools, advanced commands, setup help, and stronger desktop
-                    control.
-                  </p>
-
-                  <div className="mt-4 space-y-2 text-sm text-white/50">
-                    <p>• Uses the Windows Companion app</p>
-                    <p>• Helpful for advanced ADB control</p>
-                    <p>• Best for power users and desktop-assisted setup</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-                <div className="mt-16 grid gap-6 lg:grid-cols-2">
-          {steps.map(({ Icon, title, text, bullets, glow }) => (
-            <div
-              key={title}
-              className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-cyan-300/20 sm:p-8"
-            >
+          <div className="grid gap-5">
+            {steps.map(({ Icon, title, text, bullets, glow }, index) => (
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${glow} opacity-0 transition duration-500 group-hover:opacity-100`}
-              />
+                key={title}
+                className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-6"
+              >
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${glow}`}
+                />
 
-              <div className="relative">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-300/15 bg-black/35 shadow-[0_0_35px_rgba(34,211,238,.16)] sm:h-16 sm:w-16">
-                  <Icon className="text-cyan-300" size={28} />
-                </div>
+                <div className="relative flex gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10">
+                    <Icon className="h-6 w-6 text-cyan-300" />
+                  </div>
 
-                <h3 className="mt-6 text-2xl font-black text-white sm:text-3xl">
-                  {title}
-                </h3>
-
-                <p className="mt-4 text-sm leading-7 text-white/60 sm:text-base sm:leading-8">
-                  {text}
-                </p>
-
-                <div className="mt-7 space-y-3">
-                  {bullets.map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-start gap-3 rounded-2xl border border-white/5 bg-black/25 px-4 py-4"
-                    >
-                      <div className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,.9)]" />
-
-                      <p className="text-sm leading-6 text-white/70">
-                        {item}
-                      </p>
+                  <div>
+                    <div className="text-xs font-black uppercase tracking-[0.25em] text-cyan-300/70">
+                      Step {index + 1}
                     </div>
-                  ))}
-                </div>
 
-                <div className="mt-7 flex items-center gap-2 text-sm font-bold text-cyan-300">
-                  <div className="h-[2px] w-8 rounded-full bg-cyan-300" />
-                  RemoteForge System
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+                    <h3 className="mt-1 text-xl font-black text-white">
+                      {title}
+                    </h3>
 
-        <div className="mt-16 rounded-[2rem] border border-cyan-300/10 bg-black/30 p-5 backdrop-blur-2xl sm:rounded-[2.5rem] sm:p-8">
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            {[
-              "Discover Devices",
-              "Choose Fire TV Method",
-              "Secure Pairing",
-              "Control Screens",
-            ].map((step, index) => (
-              <div key={step} className="flex min-w-0 items-center gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 to-violet-500 text-base font-black text-black shadow-[0_0_30px_rgba(34,211,238,.35)] sm:h-14 sm:w-14 sm:text-lg">
-                  0{index + 1}
-                </div>
+                    <p className="mt-2 leading-7 text-white/55">{text}</p>
 
-                <div className="min-w-0">
-                  <p className="text-base font-black text-white sm:text-lg">
-                    {step}
-                  </p>
-
-                  <p className="mt-1 text-sm text-white/50">
-                    RemoteForge connected ecosystem
-                  </p>
+                    <ul className="mt-4 grid gap-2">
+                      {bullets.map((bullet) => (
+                        <li
+                          key={bullet}
+                          className="flex gap-2 text-sm font-bold text-white/60"
+                        >
+                          <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
             ))}
@@ -291,5 +177,20 @@ export default function HowItWorksSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function MiniStat({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.045] p-4 backdrop-blur-xl">
+      <Icon className="h-5 w-5 text-cyan-300" />
+      <span className="text-sm font-black text-white/70">{label}</span>
+    </div>
   );
 }

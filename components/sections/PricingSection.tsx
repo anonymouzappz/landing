@@ -1,16 +1,24 @@
-import { CheckCircle2, Crown, ShieldCheck, Sparkles, Zap } from "lucide-react";
+import {
+  CheckCircle2,
+  Crown,
+  ShieldCheck,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 
 const plans = [
   {
     name: "Free",
     price: "$0",
-    sub: "Ads + limited devices",
+    sub: "Ads + limited control",
     tag: "Start here",
     icon: ShieldCheck,
     features: [
-      "1 saved device",
+      "1 saved remote device",
       "Basic Roku controls",
-      "Guest testing",
+      "Android TV / Google TV scanning",
+      "Home Assistant preview",
+      "Matter setup preview",
       "Ads supported",
     ],
   },
@@ -22,10 +30,12 @@ const plans = [
     icon: Zap,
     featured: true,
     features: [
-      "Unlimited devices",
+      "Unlimited saved devices",
       "Windows Companion",
-      "Rooms",
-      "Casting",
+      "Fire TV Companion support",
+      "Home Assistant Smart Home Remote",
+      "Matter Direct Control prep",
+      "Rooms and favorites",
       "No ads",
     ],
   },
@@ -38,8 +48,10 @@ const plans = [
     features: [
       "Everything in Monthly",
       "Save vs monthly",
-      "Premium sync",
-      "Advanced controls",
+      "Unlimited smart-home devices",
+      "Advanced remotes",
+      "Priority scanning",
+      "Future premium tools",
     ],
   },
   {
@@ -51,8 +63,10 @@ const plans = [
     features: [
       "Lifetime premium",
       "No subscription",
+      "All smart-home features",
+      "Home Assistant Remote",
+      "Matter Direct features",
       "Early supporter access",
-      "Future premium tools",
     ],
   },
 ];
@@ -67,12 +81,13 @@ export default function PricingSection() {
           </p>
 
           <h2 className="mt-4 text-4xl font-black tracking-tight md:text-6xl">
-            Start free. Upgrade when you need more power.
+            Start free. Upgrade when your remote needs more power.
           </h2>
 
           <p className="mt-5 text-lg leading-8 text-white/60">
-            Keep basic control free, then unlock unlimited devices, rooms,
-            Windows Companion, casting, and an ad-free RemoteForge experience.
+            Use RemoteForge for basic remote control, then unlock unlimited
+            devices, Windows Companion, Home Assistant Smart Home Remote, Matter
+            Direct Control features, rooms, and an ad-free experience.
           </p>
         </div>
 
@@ -105,10 +120,14 @@ export default function PricingSection() {
                   </span>
                 </div>
 
-                <h3 className="mt-6 text-2xl font-black">{plan.name}</h3>
+                <h3 className="mt-6 text-2xl font-black text-white">
+                  {plan.name}
+                </h3>
 
                 <div className="mt-3 flex items-end gap-2">
-                  <span className="text-4xl font-black">{plan.price}</span>
+                  <span className="text-4xl font-black text-white">
+                    {plan.price}
+                  </span>
                   <span className="pb-1 text-sm font-bold text-white/50">
                     {plan.sub}
                   </span>
@@ -136,7 +155,7 @@ export default function PricingSection() {
                       : "border border-white/10 bg-white/10 text-white",
                   ].join(" ")}
                 >
-                  Coming Soon
+                  Available In App
                 </button>
               </div>
             );
@@ -144,8 +163,8 @@ export default function PricingSection() {
         </div>
 
         <p className="mt-8 text-center text-sm font-semibold text-white/45">
-          Prices may vary by region through Google Play billing. Purchases will
-          be available inside the Android app.
+          Prices may vary by region through Google Play billing. Purchases are
+          managed inside the Android app.
         </p>
       </div>
     </section>

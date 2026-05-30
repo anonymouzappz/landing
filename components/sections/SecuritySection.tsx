@@ -1,13 +1,14 @@
 import {
-  LockKeyhole,
-  Router,
-  UserCheck,
-  ShieldCheck,
   Fingerprint,
-  Wifi,
+  Home,
+  LockKeyhole,
+  QrCode,
+  Router,
   ScanLine,
   Server,
-  Sparkles,
+  ShieldCheck,
+  UserCheck,
+  Wifi,
   type LucideIcon,
 } from "lucide-react";
 
@@ -23,35 +24,57 @@ const cards: SecurityCard[] = [
   {
     Icon: Router,
     title: "Local Network First",
-    text: "Roku and Windows Companion commands run over your trusted WiFi instead of public remote-control servers.",
+    text: "RemoteForge focuses on local WiFi communication for supported remotes, smart devices, Windows Companion, and Home Assistant connections.",
     points: [
-      "Local WiFi communication",
-      "No public remote tunnel required",
-      "Fast low-latency command flow",
+      "Local WiFi command flow",
+      "Fast response for supported devices",
+      "Designed for trusted networks",
     ],
     glow: "from-cyan-400/20 to-blue-500/10",
   },
   {
     Icon: UserCheck,
-    title: "Account-Gated Pairing",
-    text: "Guests can explore simple features, but saving devices and pairing with Windows Companion requires login.",
+    title: "Account-Gated Saving",
+    text: "Guests can explore simple features, but saving devices, syncing rooms, pairing companion tools, and premium smart-home features require login.",
     points: [
       "Guest-safe testing",
-      "Login required for PC pairing",
       "Saved devices tied to user account",
+      "Premium gates for advanced controls",
     ],
     glow: "from-violet-500/20 to-fuchsia-500/10",
   },
   {
     Icon: LockKeyhole,
     title: "Pairing Code Protection",
-    text: "The Windows Companion displays a pairing code so only someone near the computer can approve access.",
+    text: "Windows Companion uses pairing codes so access requires someone near the computer during setup.",
     points: [
-      "One-time pairing code",
+      "One-time pairing flow",
       "Physical access verification",
-      "Future QR pairing support",
+      "Companion access control",
     ],
     glow: "from-emerald-400/20 to-cyan-500/10",
+  },
+  {
+    Icon: Home,
+    title: "Home Assistant Bridge",
+    text: "Home Assistant access is stored per user and used to load and control only that user’s configured smart-home bridge.",
+    points: [
+      "User-owned bridge connection",
+      "Smart-home devices stay in Home Assistant",
+      "RemoteForge acts as a remote layer",
+    ],
+    glow: "from-blue-500/20 to-cyan-500/10",
+  },
+  {
+    Icon: QrCode,
+    title: "Matter QR Setup",
+    text: "Matter setup uses QR/manual pairing codes and a native Android channel path for future direct Matter commissioning.",
+    points: [
+      "QR setup flow",
+      "Manual setup code support",
+      "Native channel preparation",
+    ],
+    glow: "from-fuchsia-500/20 to-violet-500/10",
   },
 ];
 
@@ -61,7 +84,6 @@ export default function SecuritySection() {
       id="security"
       className="relative overflow-hidden border-y border-cyan-300/10 bg-[#040816] px-5 py-28"
     >
-      {/* BACKGROUND FX */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(34,211,238,.13),transparent_32%),radial-gradient(circle_at_82%_80%,rgba(168,85,247,.15),transparent_38%)]" />
 
       <div className="absolute inset-0 opacity-[0.035]">
@@ -69,7 +91,6 @@ export default function SecuritySection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        {/* HEADER */}
         <div className="grid items-center gap-14 lg:grid-cols-[.9fr_1.1fr]">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-sm font-black uppercase tracking-[0.22em] text-cyan-200 backdrop-blur-xl">
@@ -90,24 +111,25 @@ export default function SecuritySection() {
 
             <div className="relative">
               <p className="text-lg leading-8 text-white/70">
-                RemoteForge is designed for your personal devices, your trusted
-                network, and permission-based control. The MVP keeps control
-                local-first while requiring secure pairing for Windows Companion.
+                RemoteForge is designed for your personal devices, trusted
+                network, and permission-based control. Local-first control,
+                user accounts, pairing codes, and premium gates help keep the
+                experience safer and more intentional.
               </p>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2">
                 {[
                   { Icon: Wifi, label: "Local WiFi First" },
                   { Icon: Fingerprint, label: "User-Based Access" },
-                  { Icon: ScanLine, label: "Pairing Code Approval" },
+                  { Icon: ScanLine, label: "QR + Pairing Setup" },
                   { Icon: Server, label: "No Public Remote Tunnel" },
                 ].map(({ Icon, label }) => (
                   <div
                     key={label}
-                    className="flex items-center gap-3 rounded-2xl border border-cyan-300/10 bg-black/30 px-4 py-4"
+                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/25 p-4"
                   >
-                    <Icon className="text-cyan-300" size={20} />
-                    <span className="text-sm font-bold text-white/75">
+                    <Icon className="h-5 w-5 text-cyan-300" />
+                    <span className="text-sm font-black text-white/75">
                       {label}
                     </span>
                   </div>
@@ -117,71 +139,39 @@ export default function SecuritySection() {
           </div>
         </div>
 
-        {/* SECURITY CARDS */}
-        <div className="mt-16 grid gap-6 lg:grid-cols-3">
+        <div className="mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {cards.map(({ Icon, title, text, points, glow }) => (
             <div
               key={title}
-              className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-7 backdrop-blur-xl transition duration-500 hover:-translate-y-1 hover:border-cyan-300/20"
+              className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-6 shadow-2xl shadow-black/25 backdrop-blur-xl"
             >
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${glow} opacity-0 transition duration-500 group-hover:opacity-100`}
-              />
+              <div className={`absolute inset-0 bg-gradient-to-br ${glow}`} />
 
               <div className="relative">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-300/15 bg-black/35 shadow-[0_0_35px_rgba(34,211,238,.16)]">
-                  <Icon className="text-cyan-300" size={30} />
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-300/10">
+                  <Icon className="h-6 w-6 text-cyan-300" />
                 </div>
 
                 <h3 className="mt-6 text-2xl font-black text-white">
                   {title}
                 </h3>
 
-                <p className="mt-4 text-sm leading-7 text-white/60">
-                  {text}
-                </p>
+                <p className="mt-3 leading-7 text-white/55">{text}</p>
 
-                <div className="mt-7 space-y-3">
+                <ul className="mt-5 space-y-2">
                   {points.map((point) => (
-                    <div
+                    <li
                       key={point}
-                      className="flex items-start gap-3 rounded-2xl border border-white/5 bg-black/25 px-4 py-4"
+                      className="flex gap-2 text-sm font-bold text-white/60"
                     >
-                      <div className="mt-1 h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,.9)]" />
-
-                      <p className="text-sm leading-6 text-white/70">
-                        {point}
-                      </p>
-                    </div>
+                      <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+                      {point}
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* SECURITY NOTICE */}
-        <div className="mt-16 relative overflow-hidden rounded-[2.5rem] border border-cyan-300/10 bg-black/35 p-8 backdrop-blur-2xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-transparent to-violet-500/10" />
-
-          <div className="relative grid gap-8 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
-            <div>
-              <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-cyan-300/15 bg-cyan-400/10 shadow-[0_0_35px_rgba(34,211,238,.16)]">
-                <Sparkles className="text-cyan-300" size={28} />
-              </div>
-
-              <h3 className="mt-5 text-3xl font-black text-white">
-                Permission-based control only.
-              </h3>
-            </div>
-
-            <p className="text-base leading-8 text-white/60">
-              RemoteForge is intended only for devices you own or have permission
-              to control. Future versions can add encrypted pairing tokens, QR
-              pairing, device approval, session expiration, signed companion
-              sessions, and advanced account-level security controls.
-            </p>
-          </div>
         </div>
       </div>
     </section>

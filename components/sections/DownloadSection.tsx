@@ -2,8 +2,10 @@ import Link from "next/link";
 import {
   ArrowRight,
   Download,
+  Home,
   Monitor,
   PlayCircle,
+  QrCode,
   ShieldCheck,
   Smartphone,
   Sparkles,
@@ -27,14 +29,14 @@ export default function DownloadSection() {
                 Android Testing Open
               </div>
 
-              <h2 className="mt-5 text-4xl font-black tracking-tight md:text-6xl">
-                Test RemoteForge on Android.
+              <h2 className="mt-5 text-4xl font-black tracking-tight text-white md:text-6xl">
+                Test the new RemoteForge smart remote.
               </h2>
 
               <p className="mt-5 max-w-2xl text-lg leading-8 text-white/60">
-                Join the Android testing release to try RemoteForge, connect
-                Roku devices, test smart remotes, and help shape the final
-                launch.
+                Join the Android testing release to try Roku, Android TV,
+                Google TV, Fire TV setup, Windows Companion, Home Assistant
+                Smart Home Remote, and Matter setup preparation.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -63,7 +65,7 @@ export default function DownloadSection() {
 
               <p className="mt-4 text-sm font-semibold text-white/45">
                 Android testing is handled through Google Play. Availability may
-                depend on tester access and region.
+                depend on tester access, track access, and region.
               </p>
             </div>
 
@@ -76,17 +78,27 @@ export default function DownloadSection() {
               <FeatureCard
                 icon={Monitor}
                 title="Windows Companion"
-                text="Pair your PC for touchpad, keyboard, and controller features."
+                text="Pair your PC for touchpad, keyboard, controller, and Fire TV bridge features."
+              />
+              <FeatureCard
+                icon={Home}
+                title="Home Assistant Remote"
+                text="Control lights, plugs, thermostats, speakers, scenes, sensors, and more."
+              />
+              <FeatureCard
+                icon={QrCode}
+                title="Matter Setup Ready"
+                text="Matter QR scanning and direct-control preparation are built into the app."
               />
               <FeatureCard
                 icon={ShieldCheck}
                 title="Secure Local Control"
-                text="RemoteForge is designed around local network control and pairing."
+                text="RemoteForge is designed around local network control, pairing, and user-owned devices."
               />
               <FeatureCard
                 icon={Sparkles}
-                title="Premium Ready"
-                text="Test rooms, device limits, premium gates, and update flows."
+                title="Premium Smart Home"
+                text="Test premium gates for unlimited devices, smart-home remotes, Matter, rooms, and no ads."
               />
             </div>
           </div>

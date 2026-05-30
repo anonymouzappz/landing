@@ -7,6 +7,8 @@ import SecuritySection from "@/components/sections/SecuritySection";
 import VisionSection from "@/components/sections/VisionSection";
 import Footer from "@/components/ui/Footer";
 import NavBar from "@/components/ui/NavBar";
+import EarlyBirdPage from "./early-bird/page";
+import EarlyBirdSection from "@/components/sections/EarlyBirdSection";
 
 export default function HomePage() {
   return (
@@ -48,7 +50,7 @@ export default function HomePage() {
         <SecuritySection />
 
         {/* PRICING */}
-        <PricingSection />
+        <EarlyBirdSection/>
 
         <DownloadSection />
 
