@@ -25,6 +25,7 @@ const nav = [
   { label: "Announcements", href: "/admin/announcements", icon: Megaphone },
   { label: "Support", href: "/admin/support", icon: Bell },
   { label: "Android Update", href: "/admin/android-update", icon: RefreshCw },
+  { label: "Notifications", href: "/admin/notifications", icon: Bell },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
