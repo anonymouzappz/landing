@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 const checkoutEnabled =
-  process.env.NEXT_PUBLIC_EARLY_BIRD_CHECKOUT_ENABLED;
+  process.env.NEXT_PUBLIC_EARLY_BIRD_CHECKOUT_ENABLED === "true";
 
 const plans = [
   {
