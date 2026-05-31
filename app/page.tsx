@@ -2,13 +2,13 @@ import DownloadSection from "@/components/sections/DownloadSection";
 import FAQSection from "@/components/sections/FAQSection";
 import HeroSection from "@/components/sections/HeroSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
-import PricingSection from "@/components/sections/PricingSection";
 import SecuritySection from "@/components/sections/SecuritySection";
 import VisionSection from "@/components/sections/VisionSection";
+import EarlyBirdSection from "@/components/sections/EarlyBirdSection";
 import Footer from "@/components/ui/Footer";
 import NavBar from "@/components/ui/NavBar";
-import EarlyBirdPage from "./early-bird/page";
-import EarlyBirdSection from "@/components/sections/EarlyBirdSection";
+import PublicSupportFabMount from "@/components/PublicSupportFabMount";
+import SupportFeedbackFab from "@/components/SupportFeedbackFab";
 
 export default function HomePage() {
   return (
@@ -49,16 +49,16 @@ export default function HomePage() {
 
         <SecuritySection />
 
-        {/* PRICING */}
-        <EarlyBirdSection/>
+        <EarlyBirdSection />
 
         <DownloadSection />
 
-        {/* FAQ */}
         <FAQSection />
 
         <Footer />
       </div>
+
+   
     </main>
   );
 }

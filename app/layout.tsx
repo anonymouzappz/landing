@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import PublicSupportFabMount from "@/components/PublicSupportFabMount";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -114,6 +115,8 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-[#040816] text-white selection:bg-cyan-300 selection:text-black">
         {children}
+
+        <PublicSupportFabMount />
 
         {adsensePublisherId ? (
           <Script

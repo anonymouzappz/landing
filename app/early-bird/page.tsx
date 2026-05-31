@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,6 +12,7 @@ import {
   Timer,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
 
 const plans = [
   {
@@ -134,7 +134,7 @@ export default function EarlyBirdPage() {
             <div className="mt-8 inline-flex flex-wrap items-center justify-center gap-3 rounded-[1.5rem] border border-cyan-300/15 bg-white/[0.045] p-3 shadow-2xl shadow-black/30 backdrop-blur-xl">
               <Badge text="Monthly $1.99" />
               <Badge text="Yearly $9.99" />
-              <Badge text="Lifetime $14.99" />
+              <Badge text="Best Deal: Lifetime $14.99" />
             </div>
           </div>
 

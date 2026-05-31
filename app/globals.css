@@ -12,11 +12,13 @@
 
 html {
   scroll-behavior: smooth;
+  min-height: 100%;
 }
 
 body {
   min-height: 100vh;
   overflow-x: hidden;
+  isolation: isolate;
   background:
     radial-gradient(circle at 18% 12%, rgba(34, 211, 238, 0.16), transparent 32%),
     radial-gradient(circle at 82% 18%, rgba(217, 70, 239, 0.14), transparent 34%),
@@ -24,12 +26,13 @@ body {
   color: white;
 }
 
+/* Keep visual overlays BEHIND content, not above FAB/modals */
 body::before {
   content: "";
   pointer-events: none;
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: -2;
   opacity: 0.035;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
@@ -43,10 +46,9 @@ body::after {
   pointer-events: none;
   position: fixed;
   inset: 0;
-  z-index: 9998;
+  z-index: -1;
   opacity: 0.08;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
   background-size: 100% 4px;
   mix-blend-mode: screen;
 }
@@ -161,6 +163,12 @@ body::after {
   height: 18%;
   background: linear-gradient(to bottom, transparent, rgba(34, 211, 238, 0.18), transparent);
   animation: rf-scan 4.5s linear infinite;
+}
+
+/* Emergency utility for floating UI */
+.rf-floating-ui {
+  position: fixed;
+  z-index: 2147483647;
 }
 
 @keyframes rf-float {

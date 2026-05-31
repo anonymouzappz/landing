@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 const checkoutEnabled =
-  process.env.NEXT_PUBLIC_EARLY_BIRD_CHECKOUT_ENABLED === "true";
+  process.env.NEXT_PUBLIC_EARLY_BIRD_CHECKOUT_ENABLED;
 
 const plans = [
   {
@@ -40,10 +40,10 @@ const plans = [
     price: "$9.99",
     originalPrice: "$19.99",
     sub: "per year",
-    tag: "Best Value",
+    tag: "Save Yearly",
     icon: Sparkles,
     checkoutHref: "/api/stripe/yearly-checkout",
-    featured: true,
+    featured: false,
     features: [
       "Everything in Monthly",
       "Best yearly savings",
@@ -59,13 +59,14 @@ const plans = [
     price: "$14.99",
     originalPrice: "$29.99",
     sub: "one-time",
-    tag: "50% Off",
+    tag: "Best Deal",
     icon: Crown,
     checkoutHref: "/api/stripe/lifetime-checkout",
-    featured: false,
+    featured: true,
     features: [
       "Lifetime premium",
       "No subscription",
+      "Best overall value",
       "All smart-home features",
       "Home Assistant Remote",
       "Matter Direct features",

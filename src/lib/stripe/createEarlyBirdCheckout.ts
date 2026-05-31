@@ -107,7 +107,7 @@ export async function createEarlyBirdCheckout(plan: EarlyBirdPlan) {
     ],
 
     automatic_tax: {
-      enabled: true,
+      enabled: false,
     },
 
     allow_promotion_codes: false,

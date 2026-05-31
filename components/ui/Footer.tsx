@@ -6,6 +6,7 @@ import {
   Globe,
   PlayCircle,
 } from "lucide-react";
+import SubscriberForm from "../SubscriberForm";
 
 const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.anonymouzappz.remoteforge";
@@ -20,7 +21,7 @@ export default function Footer() {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div className="grid gap-10 lg:grid-cols-[1fr_0.95fr] lg:items-start">
           <div>
             <p className="text-2xl font-black tracking-[-0.04em]">
               Remote
@@ -35,8 +36,9 @@ export default function Footer() {
 
             <p className="mt-7 max-w-2xl text-base leading-8 text-white/60">
               RemoteForge is building a universal remote-control ecosystem for
-              Roku TVs, Windows PCs, streaming devices, media systems, smart
-              screens, and future AI-powered automation experiences.
+              Roku TVs, Android TV, Google TV, Fire TV, Windows PCs, Home
+              Assistant, Matter-ready smart devices, media systems, and future
+              AI-powered automation.
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
@@ -52,7 +54,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[2rem] border border-cyan-300/10 bg-white/[0.03] p-8 backdrop-blur-2xl">
+          <div className="relative overflow-hidden rounded-[2rem] border border-cyan-300/10 bg-white/[0.03] p-6 backdrop-blur-2xl md:p-8">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-transparent to-violet-500/10" />
 
             <div className="relative">
@@ -61,12 +63,13 @@ export default function Footer() {
               </p>
 
               <h3 className="mt-4 text-3xl font-black leading-tight text-white">
-                Test RemoteForge on Android today.
+                Test RemoteForge on Android.
               </h3>
 
               <p className="mt-4 text-sm leading-7 text-white/60">
-                Join the Google Play testing release and download the Windows
-                Companion for PC controls.
+                Join the Google Play testing release and subscribe for tester
+                instructions, launch updates, premium news, and RemoteForge
+                announcements.
               </p>
 
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -89,6 +92,8 @@ export default function Footer() {
                   Companion
                 </a>
               </div>
+
+              <SubscriberForm source="footer_android_testing" />
             </div>
           </div>
         </div>
