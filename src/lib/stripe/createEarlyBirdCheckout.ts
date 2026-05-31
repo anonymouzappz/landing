@@ -53,7 +53,7 @@ function getBaseUrl() {
   return (
     process.env.NEXT_PUBLIC_SITE_URL ||
     process.env.NEXT_PUBLIC_BASE_URL ||
-    "http://localhost:3000"
+    "https://remoteforge.net"
   ).replace(/\/$/, "");
 }
 
@@ -95,8 +95,6 @@ export async function createEarlyBirdCheckout(plan: EarlyBirdPlan) {
   const session = await stripe.checkout.sessions.create({
     mode: config.mode,
 
-    // Important for your live account while Cards are pending/being approved.
-    // Once Cards are fully enabled, this is still fine.
     payment_method_types: ["card"],
 
     line_items: [
