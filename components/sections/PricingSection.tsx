@@ -1,18 +1,38 @@
+"use client";
+
 import {
   CheckCircle2,
   Crown,
+  Loader2,
   ShieldCheck,
   Sparkles,
   Zap,
 } from "lucide-react";
+import { useState } from "react";
 
-const plans = [
+type PaidPlanKey = "monthly" | "yearly" | "lifetime";
+
+type Plan = {
+  name: string;
+  key: "free" | PaidPlanKey;
+  price: string;
+  sub: string;
+  tag: string;
+  icon: typeof ShieldCheck;
+  featured?: boolean;
+  checkoutLabel: string;
+  features: string[];
+};
+
+const plans: Plan[] = [
   {
     name: "Free",
+    key: "free",
     price: "$0",
     sub: "Ads + limited control",
     tag: "Start here",
     icon: ShieldCheck,
+    checkoutLabel: "Start In App",
     features: [
       "1 saved remote device",
       "Basic Roku controls",
@@ -24,11 +44,13 @@ const plans = [
   },
   {
     name: "Monthly",
+    key: "monthly",
     price: "$2.99",
     sub: "per month",
     tag: "Most popular",
     icon: Zap,
     featured: true,
+    checkoutLabel: "Checkout Monthly",
     features: [
       "Unlimited saved devices",
       "Windows Companion",
@@ -41,10 +63,12 @@ const plans = [
   },
   {
     name: "Yearly",
+    key: "yearly",
     price: "$19.99",
     sub: "per year",
     tag: "Best value",
     icon: Sparkles,
+    checkoutLabel: "Checkout Yearly",
     features: [
       "Everything in Monthly",
       "Save vs monthly",
@@ -56,10 +80,12 @@ const plans = [
   },
   {
     name: "Lifetime",
+    key: "lifetime",
     price: "$29.99",
     sub: "one-time",
     tag: "Early supporter",
     icon: Crown,
+    checkoutLabel: "Checkout Lifetime",
     features: [
       "Lifetime premium",
       "No subscription",
@@ -72,6 +98,53 @@ const plans = [
 ];
 
 export default function PricingSection() {
+  const [loadingPlan, setLoadingPlan] = useState<string>("");
+  const [error, setError] = useState("");
+
+async function startCheckout(plan: Plan) {
+  if (plan.key === "free") {
+    document.getElementById("download")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+    return;
+  }
+
+  setError("");
+  setLoadingPlan(plan.key);
+
+  try {
+    const res = await fetch("/api/stripe/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        plan: plan.key,
+      }),
+    });
+
+    const data = (await res.json()) as {
+      url?: string;
+      error?: string;
+    };
+
+    if (!res.ok || !data.url) {
+      throw new Error(data.error || "Could not start checkout.");
+    }
+
+    window.location.assign(data.url);
+  } catch (err) {
+    setError(
+      err instanceof Error
+        ? err.message
+        : "Something went wrong starting checkout.",
+    );
+  } finally {
+    setLoadingPlan("");
+  }
+}
+
   return (
     <section id="pricing" className="relative px-5 py-24">
       <div className="mx-auto max-w-7xl">
@@ -89,11 +162,18 @@ export default function PricingSection() {
             devices, Windows Companion, Home Assistant Smart Home Remote, Matter
             Direct Control features, rooms, and an ad-free experience.
           </p>
+
+          {error && (
+            <div className="mx-auto mt-6 max-w-2xl rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-100">
+              {error}
+            </div>
+          )}
         </div>
 
         <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {plans.map((plan) => {
             const Icon = plan.icon;
+            const isLoading = loadingPlan === plan.key;
 
             return (
               <div
@@ -147,15 +227,24 @@ export default function PricingSection() {
 
                 <button
                   type="button"
-                  disabled
+                  onClick={() => startCheckout(plan)}
+                  disabled={Boolean(loadingPlan)}
                   className={[
-                    "mt-7 flex h-12 w-full cursor-not-allowed items-center justify-center rounded-2xl text-sm font-black opacity-70",
+                    "mt-7 flex h-12 w-full items-center justify-center rounded-2xl text-sm font-black transition",
+                    "disabled:cursor-not-allowed disabled:opacity-60",
                     plan.featured
-                      ? "bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-white"
-                      : "border border-white/10 bg-white/10 text-white",
+                      ? "bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-white hover:brightness-110"
+                      : "border border-white/10 bg-white/10 text-white hover:bg-white/15",
                   ].join(" ")}
                 >
-                  Available In App
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Opening Checkout...
+                    </>
+                  ) : (
+                    plan.checkoutLabel
+                  )}
                 </button>
               </div>
             );
@@ -163,8 +252,8 @@ export default function PricingSection() {
         </div>
 
         <p className="mt-8 text-center text-sm font-semibold text-white/45">
-          Prices may vary by region through Google Play billing. Purchases are
-          managed inside the Android app.
+          Website purchases are processed securely by Stripe. Android in-app
+          purchases may still be managed through Google Play billing.
         </p>
       </div>
     </section>

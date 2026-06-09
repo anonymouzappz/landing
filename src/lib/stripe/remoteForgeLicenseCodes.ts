@@ -1,17 +1,24 @@
 import { DocumentReference, FieldValue } from "firebase-admin/firestore";
+
 import { adminDb } from "@/src/lib/firebase-admin";
 
-type CodePrefix = "RF-MO" | "RF-YR" | "RF-LT";
+export type RegularPlan = "monthly" | "yearly" | "lifetime";
+
+export type CodePrefix = "RF-MONTHLY" | "RF-YEARLY" | "RF-LIFETIME";
+
+export type PremiumPlan =
+  | "stripe_monthly"
+  | "stripe_yearly"
+  | "stripe_lifetime";
+
+export type SubscriptionStatus = "monthly" | "yearly" | "lifetime";
 
 export type CreateLicenseCodeInput = {
   codePrefix: CodePrefix;
   email: string;
-  plan: "monthly" | "yearly" | "lifetime";
-  premiumPlan:
-    | "early_bird_monthly"
-    | "early_bird_yearly"
-    | "early_bird_lifetime";
-  subscriptionStatus: "monthly" | "yearly" | "lifetime";
+  plan: RegularPlan;
+  premiumPlan: PremiumPlan;
+  subscriptionStatus: SubscriptionStatus;
   stripeCheckoutSessionId: string;
   stripePaymentIntentId?: string;
   stripeSubscriptionId?: string;
@@ -36,7 +43,7 @@ async function createUniqueCode(prefix: CodePrefix): Promise<{
   code: string;
   ref: DocumentReference;
 }> {
-  for (let attempt = 0; attempt < 12; attempt++) {
+  for (let attempt = 0; attempt < 12; attempt += 1) {
     const code = makeLicenseCode(prefix);
     const ref = adminDb.collection("licenseCodes").doc(code);
     const snap = await ref.get();
@@ -52,9 +59,13 @@ async function createUniqueCode(prefix: CodePrefix): Promise<{
 export async function findLicenseByCheckoutSession(
   stripeCheckoutSessionId: string,
 ) {
+  const cleanSessionId = stripeCheckoutSessionId.trim();
+
+  if (!cleanSessionId) return null;
+
   const snap = await adminDb
     .collection("licenseCodes")
-    .where("stripeCheckoutSessionId", "==", stripeCheckoutSessionId)
+    .where("stripeCheckoutSessionId", "==", cleanSessionId)
     .limit(1)
     .get();
 
@@ -64,9 +75,13 @@ export async function findLicenseByCheckoutSession(
 }
 
 export async function findLicenseBySubscription(stripeSubscriptionId: string) {
+  const cleanSubscriptionId = stripeSubscriptionId.trim();
+
+  if (!cleanSubscriptionId) return null;
+
   const snap = await adminDb
     .collection("licenseCodes")
-    .where("stripeSubscriptionId", "==", stripeSubscriptionId)
+    .where("stripeSubscriptionId", "==", cleanSubscriptionId)
     .limit(1)
     .get();
 
@@ -92,31 +107,51 @@ export async function createRemoteForgeLicenseCode(
 
   const { code, ref } = await createUniqueCode(input.codePrefix);
 
+  const stripePaymentIntentId = input.stripePaymentIntentId || "";
+  const stripeSubscriptionId = input.stripeSubscriptionId || "";
+  const stripeCustomerId = input.stripeCustomerId || "";
+
   const data = {
     code,
-    type: input.premiumPlan,
-    source: "stripe",
+
+    type: "stripe",
+    source: "stripe_regular_pricing",
+    offer: "regular",
+
     email: input.email,
+    buyerEmail: input.email,
+
     plan: input.plan,
     premiumPlan: input.premiumPlan,
     subscriptionStatus: input.subscriptionStatus,
 
     isPremium: true,
     adsDisabled: true,
+    isActive: true,
+
+    status: "unused",
+    maxUses: 1,
+    usedCount: 0,
 
     isRedeemed: false,
     redeemedByUid: null,
     redeemedAt: null,
 
     stripeCheckoutSessionId: input.stripeCheckoutSessionId,
-    stripePaymentIntentId: input.stripePaymentIntentId || "",
-    stripeSubscriptionId: input.stripeSubscriptionId || "",
-    stripeCustomerId: input.stripeCustomerId || "",
+    stripePaymentIntentId,
+    stripeSubscriptionId,
+    stripeCustomerId,
+    stripeSubscriptionStatus: stripeSubscriptionId ? "pending" : "",
+    stripePaymentStatus: "paid",
 
     amountTotal: input.amountTotal ?? null,
-    currency: input.currency ?? null,
+    currency: input.currency ?? "usd",
 
-    isActive: true,
+    emailSent: false,
+    emailSentAt: null,
+    emailError: "",
+    resendEmailId: "",
+
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),
     expiresAt: null,

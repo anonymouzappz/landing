@@ -7,17 +7,38 @@ import { adminDb } from "@/src/lib/firebase-admin";
 import {
   createRemoteForgeLicenseCode,
   findLicenseBySubscription,
+  type CodePrefix,
+  type PremiumPlan,
+  type RegularPlan,
+  type SubscriptionStatus,
 } from "@/src/lib/stripe/remoteForgeLicenseCodes";
 
 export const runtime = "nodejs";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+function requiredEnv(name: string): string {
+  const value = process.env[name];
 
-function readString(value: unknown) {
-  return typeof value === "string" ? value : "";
+  if (!value || value.trim().length === 0) {
+    throw new Error(`Missing ${name}`);
+  }
+
+  return value.trim();
 }
 
-function getCustomerEmail(session: Stripe.Checkout.Session) {
+const stripeSecretKey = requiredEnv("STRIPE_SECRET_KEY");
+const stripeWebhookSecret = requiredEnv("STRIPE_WEBHOOK_SECRET");
+
+const stripe = new Stripe(stripeSecretKey);
+
+function readString(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function isRemoteForgePlan(value: unknown): value is RegularPlan {
+  return value === "monthly" || value === "yearly" || value === "lifetime";
+}
+
+function getCustomerEmail(session: Stripe.Checkout.Session): string {
   return (
     session.customer_details?.email ||
     session.customer_email ||
@@ -25,11 +46,61 @@ function getCustomerEmail(session: Stripe.Checkout.Session) {
   ).trim();
 }
 
-function getPlanLabel(plan: string) {
-  if (plan === "monthly") return "Monthly Early Bird";
-  if (plan === "yearly") return "Yearly Early Bird";
-  if (plan === "lifetime") return "Lifetime Early Bird";
-  return "Early Bird";
+function getCodePrefix(plan: RegularPlan): CodePrefix {
+  if (plan === "monthly") return "RF-MONTHLY";
+  if (plan === "yearly") return "RF-YEARLY";
+  return "RF-LIFETIME";
+}
+
+function getPremiumPlan(plan: RegularPlan): PremiumPlan {
+  if (plan === "monthly") return "stripe_monthly";
+  if (plan === "yearly") return "stripe_yearly";
+  return "stripe_lifetime";
+}
+
+function getSubscriptionStatus(plan: RegularPlan): SubscriptionStatus {
+  return plan;
+}
+
+function getPlanLabel(plan: RegularPlan): string {
+  if (plan === "monthly") return "Monthly Premium";
+  if (plan === "yearly") return "Yearly Premium";
+  return "Lifetime Premium";
+}
+
+function getStripePaymentIntentId(session: Stripe.Checkout.Session): string {
+  return typeof session.payment_intent === "string"
+    ? session.payment_intent
+    : "";
+}
+
+function getStripeSubscriptionId(session: Stripe.Checkout.Session): string {
+  return typeof session.subscription === "string"
+    ? session.subscription
+    : "";
+}
+
+function getStripeCustomerId(session: Stripe.Checkout.Session): string {
+  return typeof session.customer === "string" ? session.customer : "";
+}
+
+function getSubscriptionPeriodDates(subscription: Stripe.Subscription) {
+  const firstItem = subscription.items.data[0];
+
+  const currentPeriodStart =
+    typeof firstItem?.current_period_start === "number"
+      ? new Date(firstItem.current_period_start * 1000)
+      : null;
+
+  const currentPeriodEnd =
+    typeof firstItem?.current_period_end === "number"
+      ? new Date(firstItem.current_period_end * 1000)
+      : null;
+
+  return {
+    currentPeriodStart,
+    currentPeriodEnd,
+  };
 }
 
 export async function GET() {
@@ -45,58 +116,34 @@ async function handleCheckoutSessionCompleted(
 ) {
   console.log("[Stripe webhook] checkout.session.completed:", session.id);
 
-  if (session.metadata?.app !== "remoteforge") {
+  const metadata = session.metadata || {};
+
+  if (metadata.app !== "remoteforge") {
     console.log("[Stripe webhook] Ignored session. app metadata mismatch.");
     return;
   }
 
-  if (session.metadata?.offer !== "early_bird") {
-    console.log("[Stripe webhook] Ignored session. offer metadata mismatch.");
+  const planRaw = readString(metadata.plan);
+
+  if (!isRemoteForgePlan(planRaw)) {
+    console.warn("[Stripe webhook] Unknown RemoteForge plan:", planRaw);
     return;
   }
 
-  const plan = session.metadata.plan;
+  const plan: RegularPlan = planRaw;
 
-  if (plan !== "monthly" && plan !== "yearly" && plan !== "lifetime") {
-    console.warn("[Stripe webhook] Unknown early-bird plan:", plan);
-    return;
-  }
-
-  const codePrefix = session.metadata.codePrefix;
-
-  if (
-    codePrefix !== "RF-MO" &&
-    codePrefix !== "RF-YR" &&
-    codePrefix !== "RF-LT"
-  ) {
-    console.warn("[Stripe webhook] Unknown code prefix:", codePrefix);
-    return;
-  }
-
-  const premiumPlan = session.metadata.premiumPlan;
-
-  if (
-    premiumPlan !== "early_bird_monthly" &&
-    premiumPlan !== "early_bird_yearly" &&
-    premiumPlan !== "early_bird_lifetime"
-  ) {
-    console.warn("[Stripe webhook] Unknown premium plan:", premiumPlan);
-    return;
-  }
-
-  const subscriptionStatus = session.metadata.subscriptionStatus;
-
-  if (
-    subscriptionStatus !== "monthly" &&
-    subscriptionStatus !== "yearly" &&
-    subscriptionStatus !== "lifetime"
-  ) {
+  if (session.payment_status !== "paid") {
     console.warn(
-      "[Stripe webhook] Unknown subscription status:",
-      subscriptionStatus,
+      "[Stripe webhook] Checkout session is not paid:",
+      session.id,
+      session.payment_status,
     );
     return;
   }
+
+  const codePrefix: CodePrefix = getCodePrefix(plan);
+  const premiumPlan: PremiumPlan = getPremiumPlan(plan);
+  const subscriptionStatus: SubscriptionStatus = getSubscriptionStatus(plan);
 
   const email = getCustomerEmail(session);
 
@@ -107,9 +154,9 @@ async function handleCheckoutSessionCompleted(
     );
   }
 
-  const stripePaymentIntentId = readString(session.payment_intent);
-  const stripeSubscriptionId = readString(session.subscription);
-  const stripeCustomerId = readString(session.customer);
+  const stripePaymentIntentId = getStripePaymentIntentId(session);
+  const stripeSubscriptionId = getStripeSubscriptionId(session);
+  const stripeCustomerId = getStripeCustomerId(session);
 
   const license = await createRemoteForgeLicenseCode({
     codePrefix,
@@ -130,6 +177,36 @@ async function handleCheckoutSessionCompleted(
     license.code,
     "created=",
     license.created,
+  );
+
+  await adminDb.collection("licenseCodes").doc(license.code).set(
+    {
+      type: "stripe",
+      source: "stripe_regular_pricing",
+      offer: "regular",
+
+      plan,
+      premiumPlan,
+      subscriptionStatus,
+
+      stripeMode: session.mode || "",
+      stripePaymentStatus: session.payment_status,
+      stripeCheckoutSessionId: session.id,
+      stripePaymentIntentId,
+      stripeSubscriptionId,
+      stripeCustomerId,
+      stripePriceId:
+        readString(metadata.stripePriceId) || readString(metadata.priceId),
+
+      buyerEmail: email,
+      email,
+
+      amountTotal: session.amount_total || 0,
+      currency: session.currency || "usd",
+
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true },
   );
 
   if (!license.created) {
@@ -192,18 +269,8 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 
   const activeStatuses = ["active", "trialing"];
   const isActive = activeStatuses.includes(subscription.status);
-
-  const firstItem = subscription.items.data[0];
-
-  const currentPeriodStart =
-    typeof firstItem?.current_period_start === "number"
-      ? new Date(firstItem.current_period_start * 1000)
-      : null;
-
-  const currentPeriodEnd =
-    typeof firstItem?.current_period_end === "number"
-      ? new Date(firstItem.current_period_end * 1000)
-      : null;
+  const { currentPeriodStart, currentPeriodEnd } =
+    getSubscriptionPeriodDates(subscription);
 
   await license.ref.set(
     {
@@ -236,13 +303,17 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     {
       isPremium: isActive,
       adsDisabled: isActive,
-      subscriptionStatus: isActive ? data.subscriptionStatus : "inactive",
-      premiumPlan: isActive ? data.premiumPlan : "none",
+      subscriptionStatus: isActive
+        ? readString(data.subscriptionStatus)
+        : "inactive",
+      premiumPlan: isActive ? readString(data.premiumPlan) : "none",
       premiumUpdatedAt: FieldValue.serverTimestamp(),
+
       stripeSubscriptionStatus: subscription.status,
       currentPeriodStart,
       currentPeriodEnd,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
+
       updatedAt: FieldValue.serverTimestamp(),
       lastActiveAt: FieldValue.serverTimestamp(),
     },
@@ -271,7 +342,7 @@ export async function POST(req: NextRequest) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!,
+      stripeWebhookSecret,
     );
 
     console.log("[Stripe webhook] Verified event:", event.type);

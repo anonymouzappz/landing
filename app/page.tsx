@@ -9,6 +9,7 @@ import Footer from "@/components/ui/Footer";
 import NavBar from "@/components/ui/NavBar";
 import PublicSupportFabMount from "@/components/PublicSupportFabMount";
 import SupportFeedbackFab from "@/components/SupportFeedbackFab";
+import PricingSection from "@/components/sections/PricingSection";
 
 export default function HomePage() {
   return (
@@ -49,7 +50,7 @@ export default function HomePage() {
 
         <SecuritySection />
 
-        <EarlyBirdSection />
+        <PricingSection />
 
         <DownloadSection />
 
