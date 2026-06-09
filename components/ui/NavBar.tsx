@@ -20,7 +20,7 @@ const navItems = [
   { label: "Vision", href: "#vision" },
   { label: "How It Works", href: "#how" },
   { label: "Security", href: "#security" },
-  { label: "Early Bird Pricing", href: "#earlybird" },
+  { label: "Pricing", href: "#price" },
   { label: "FAQ", href: "#faq" },
   { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },

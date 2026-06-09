@@ -9,7 +9,7 @@ import {
 import SubscriberForm from "../SubscriberForm";
 
 const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.anonymouzappz.remoteforge";
+  "https://play.google.com/store/apps/details?id=com.anonymouzappz.remoteforge&hl=en_US";
 
 export default function Footer() {
   return (
