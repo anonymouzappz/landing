@@ -1,139 +1,150 @@
 import { Resend } from "resend";
 
-type SendLicenseEmailInput = {
+type SendRemoteForgeLicenseEmailInput = {
   to: string;
   code: string;
   plan: string;
 };
 
-function getFromEmail() {
-  return (
-    process.env.REMOTEFORGE_FROM_EMAIL ||
-    "RemoteForge <noreply@remoteforge.net>"
-  );
+type SendRemoteForgeLicenseEmailResult = {
+  sent: boolean;
+  id: string;
+  error: string;
+};
+
+const resendApiKey = process.env.RESEND_API_KEY;
+
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
+
+function cleanString(value: unknown, fallback = "") {
+  return String(value || fallback).trim();
 }
 
-function planLabel(plan: string) {
-  if (plan === "monthly") return "Monthly Early Bird";
-  if (plan === "yearly") return "Yearly Early Bird";
-  if (plan === "lifetime") return "Lifetime Early Bird";
-  return "Early Bird Premium";
+function getPlanLabel(plan: string) {
+  if (plan === "monthly") return "Monthly Premium";
+  if (plan === "yearly") return "Yearly Premium";
+  if (plan === "lifetime") return "Lifetime Premium";
+
+  if (plan === "stripe_monthly") return "Monthly Premium";
+  if (plan === "stripe_yearly") return "Yearly Premium";
+  if (plan === "stripe_lifetime") return "Lifetime Premium";
+
+  return cleanString(plan, "RemoteForge Premium");
 }
 
 export async function sendRemoteForgeLicenseEmail({
   to,
   code,
   plan,
-}: SendLicenseEmailInput) {
-  const apiKey = process.env.RESEND_API_KEY;
+}: SendRemoteForgeLicenseEmailInput): Promise<SendRemoteForgeLicenseEmailResult> {
+  try {
+    const email = cleanString(to).toLowerCase();
+    const licenseCode = cleanString(code);
+    const planLabel = getPlanLabel(plan);
 
-  if (!apiKey) {
-    console.error("[Resend] Missing RESEND_API_KEY.");
-    return {
-      sent: false,
-      error: "Missing RESEND_API_KEY",
-      id: "",
-    };
-  }
+    if (!email) {
+      return {
+        sent: false,
+        id: "",
+        error: "Missing recipient email.",
+      };
+    }
 
-  if (!to) {
-    console.error("[Resend] Missing recipient email.");
-    return {
-      sent: false,
-      error: "Missing recipient email",
-      id: "",
-    };
-  }
+    if (!licenseCode) {
+      return {
+        sent: false,
+        id: "",
+        error: "Missing RemoteForge license code.",
+      };
+    }
 
-  const resend = new Resend(apiKey);
-  const label = planLabel(plan);
+    if (!resend) {
+      return {
+        sent: false,
+        id: "",
+        error: "Missing RESEND_API_KEY.",
+      };
+    }
 
-  const { data, error } = await resend.emails.send({
-    from: getFromEmail(),
-    to,
-    subject: "Your RemoteForge Early Bird Restore Code",
-    html: `
-      <div style="margin:0;padding:0;background:#040816;font-family:Arial,Helvetica,sans-serif;color:#ffffff;">
-        <div style="max-width:640px;margin:0 auto;padding:32px 18px;">
-          <div style="border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);border-radius:28px;padding:28px;">
-            <div style="display:inline-block;padding:8px 12px;border-radius:999px;background:rgba(34,211,238,.12);color:#67e8f9;font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;">
-              RemoteForge Early Bird
-            </div>
+    const result = await resend.emails.send({
+      from:
+        process.env.REMOTEFORGE_EMAIL_FROM ||
+        "RemoteForge <support@remoteforge.net>",
+      to: email,
+      subject: "Your RemoteForge Premium Restore Code",
+      html: `
+        <div style="margin:0;padding:0;background:#050816;color:#ffffff;font-family:Arial,sans-serif;">
+          <div style="max-width:640px;margin:0 auto;padding:32px 18px;">
+            <div style="border:1px solid rgba(34,211,238,.18);background:rgba(255,255,255,.05);border-radius:28px;padding:28px;">
+              <p style="margin:0 0 10px;color:#67e8f9;font-size:12px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;">
+                RemoteForge Premium
+              </p>
 
-            <h1 style="font-size:34px;line-height:1.05;margin:22px 0 10px;font-weight:900;color:#ffffff;">
-              Your restore code is ready.
-            </h1>
+              <h1 style="margin:0;color:#ffffff;font-size:32px;line-height:1.1;font-weight:900;">
+                Your RemoteForge code is ready.
+              </h1>
 
-            <p style="font-size:16px;line-height:1.7;color:rgba(255,255,255,.68);margin:0 0 18px;">
-              Thank you for supporting RemoteForge before launch. Your <strong style="color:#ffffff;">${label}</strong> purchase has been confirmed.
-            </p>
+              <p style="margin:18px 0 0;color:rgba(255,255,255,.72);font-size:16px;line-height:1.7;">
+                Thanks for supporting RemoteForge. Use the restore code below inside the RemoteForge app to activate your ${planLabel}.
+              </p>
 
-            <div style="margin:22px 0;padding:20px;border-radius:20px;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.25);text-align:center;">
-              <div style="font-size:12px;color:#67e8f9;font-weight:900;text-transform:uppercase;letter-spacing:.18em;margin-bottom:8px;">
-                Restore Code
+              <div style="margin:26px 0;padding:20px;border-radius:20px;background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.24);text-align:center;">
+                <p style="margin:0 0 8px;color:#a5f3fc;font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;">
+                  Restore Code
+                </p>
+                <p style="margin:0;color:#ffffff;font-size:28px;font-weight:900;letter-spacing:.08em;word-break:break-word;">
+                  ${licenseCode}
+                </p>
               </div>
-              <div style="font-size:28px;line-height:1.2;font-weight:900;letter-spacing:.08em;color:#ffffff;">
-                ${code}
+
+              <div style="margin-top:24px;padding:18px;border-radius:20px;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.08);">
+                <p style="margin:0 0 10px;color:#ffffff;font-size:15px;font-weight:900;">
+                  How to activate:
+                </p>
+                <ol style="margin:0;padding-left:20px;color:rgba(255,255,255,.70);font-size:14px;line-height:1.7;">
+                  <li>Open the RemoteForge Android app.</li>
+                  <li>Sign in or create an account.</li>
+                  <li>Go to Premium or Account.</li>
+                  <li>Tap Restore with Code.</li>
+                  <li>Enter your code to activate Premium.</li>
+                </ol>
               </div>
+
+              <p style="margin:24px 0 0;color:rgba(255,255,255,.45);font-size:12px;line-height:1.6;">
+                Keep this email for your records. If you need help, contact RemoteForge support.
+              </p>
             </div>
-
-            <h2 style="font-size:20px;margin:24px 0 10px;color:#ffffff;">How to redeem</h2>
-
-            <ol style="padding-left:22px;color:rgba(255,255,255,.72);line-height:1.8;font-size:15px;">
-              <li>Open RemoteForge on Android.</li>
-              <li>Sign in with your RemoteForge account.</li>
-              <li>Go to Premium or Account.</li>
-              <li>Tap <strong>Restore with Code</strong>.</li>
-              <li>Enter the code above.</li>
-            </ol>
-
-            <p style="font-size:14px;line-height:1.7;color:rgba(255,255,255,.5);margin-top:24px;">
-              This code unlocks your early-bird Premium access. Keep this email for your records.
-            </p>
-
-            <p style="font-size:15px;line-height:1.7;color:rgba(255,255,255,.7);margin-top:24px;">
-              Thank you,<br />
-              <strong style="color:#ffffff;">RemoteForge</strong>
-            </p>
           </div>
         </div>
-      </div>
-    `,
-    text: `
-Your RemoteForge Early Bird Restore Code
+      `,
+      text: `Your RemoteForge Premium Restore Code
 
-Thank you for supporting RemoteForge before launch.
+Plan: ${planLabel}
+Code: ${licenseCode}
 
-Plan: ${label}
-Restore code: ${code}
-
-How to redeem:
-1. Open RemoteForge on Android.
-2. Sign in with your RemoteForge account.
+How to activate:
+1. Open the RemoteForge Android app.
+2. Sign in or create an account.
 3. Go to Premium or Account.
 4. Tap Restore with Code.
-5. Enter the code above.
+5. Enter your code to activate Premium.
 
-Thank you,
-RemoteForge
-    `.trim(),
-  });
-
-  if (error) {
-    console.error("[Resend] Email failed:", error);
+Keep this email for your records.`,
+    });
 
     return {
+      sent: true,
+      id: result.data?.id || "",
+      error: "",
+    };
+  } catch (error) {
+    return {
       sent: false,
-      error: JSON.stringify(error),
       id: "",
+      error:
+        error instanceof Error
+          ? error.message
+          : "Could not send RemoteForge license email.",
     };
   }
-
-  console.log("[Resend] Email sent:", data?.id);
-
-  return {
-    sent: true,
-    error: "",
-    id: data?.id || "",
-  };
 }

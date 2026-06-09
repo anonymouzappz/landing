@@ -4,7 +4,6 @@ import HeroSection from "@/components/sections/HeroSection";
 import HowItWorksSection from "@/components/sections/HowItWorksSection";
 import SecuritySection from "@/components/sections/SecuritySection";
 import VisionSection from "@/components/sections/VisionSection";
-import EarlyBirdSection from "@/components/sections/EarlyBirdSection";
 import Footer from "@/components/ui/Footer";
 import NavBar from "@/components/ui/NavBar";
 import PublicSupportFabMount from "@/components/PublicSupportFabMount";
