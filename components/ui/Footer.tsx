@@ -35,8 +35,8 @@ export default function Footer() {
             </p>
 
             <p className="mt-7 max-w-2xl text-base leading-8 text-white/60">
-              RemoteForge is building a universal remote-control ecosystem for
-              Roku TVs, Android TV, Google TV, Fire TV, Windows PCs, Home
+              RemoteForge is a universal remote-control ecosystem for Roku,
+              Android TV, Google TV, Fire TV setup, Windows PCs, Home
               Assistant, Matter-ready smart devices, media systems, and future
               AI-powered automation.
             </p>
@@ -49,7 +49,7 @@ export default function Footer() {
 
               <div className="flex items-center gap-2 rounded-2xl border border-violet-400/10 bg-violet-400/5 px-4 py-3 text-sm font-bold text-violet-200">
                 <Sparkles size={17} />
-                AI Ready Platform
+                Smart Remote Platform
               </div>
             </div>
           </div>
@@ -59,16 +59,16 @@ export default function Footer() {
 
             <div className="relative">
               <p className="text-sm font-black uppercase tracking-[0.24em] text-cyan-300">
-                Android Testing
+                Available Now
               </p>
 
               <h3 className="mt-4 text-3xl font-black leading-tight text-white">
-                Test RemoteForge on Android.
+                Download RemoteForge on Google Play.
               </h3>
 
               <p className="mt-4 text-sm leading-7 text-white/60">
-                Join the Google Play testing release and subscribe for tester
-                instructions, launch updates, premium news, and RemoteForge
+                Get RemoteForge for Android and subscribe for product updates,
+                premium news, Companion releases, smart-home features, and app
                 announcements.
               </p>
 
@@ -80,7 +80,7 @@ export default function Footer() {
                   className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-500 px-6 py-4 font-black text-black shadow-[0_0_35px_rgba(34,211,238,.35)] transition hover:-translate-y-0.5"
                 >
                   <PlayCircle size={18} />
-                  Join Android Test
+                  Google Play
                 </a>
 
                 <a
@@ -93,7 +93,7 @@ export default function Footer() {
                 </a>
               </div>
 
-              <SubscriberForm source="footer_android_testing" />
+              <SubscriberForm source="footer_live_app_updates" />
             </div>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="rounded-2xl border border-cyan-300/10 bg-cyan-400/5 px-5 py-3 text-sm font-bold text-cyan-200 transition hover:border-cyan-300/20 hover:bg-cyan-400/10"
             >
-              Android Test
+              Google Play
             </a>
 
             <Link

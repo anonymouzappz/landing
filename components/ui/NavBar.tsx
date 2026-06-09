@@ -20,7 +20,7 @@ const navItems = [
   { label: "Vision", href: "#vision" },
   { label: "How It Works", href: "#how" },
   { label: "Security", href: "#security" },
-  { label: "Pricing", href: "#price" },
+  { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
   { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
@@ -129,7 +129,7 @@ export default function NavBar() {
             className="hidden items-center gap-2 rounded-2xl border border-cyan-300/15 bg-cyan-300/10 px-4 py-3 text-sm font-black text-cyan-200 transition hover:border-cyan-300/30 hover:bg-cyan-300/15 xl:inline-flex"
           >
             <PlayCircle size={17} />
-            Android Test
+            Google Play Download
           </a>
 
           <a
@@ -169,7 +169,7 @@ export default function NavBar() {
             className="mt-4 flex items-center justify-center gap-2 rounded-2xl border border-cyan-300/15 bg-cyan-300/10 px-5 py-4 text-sm font-black text-cyan-200"
           >
             <PlayCircle size={17} />
-            Join Android Test
+            Download for Android
           </a>
 
           <a

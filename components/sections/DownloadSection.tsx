@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   Smartphone,
   Sparkles,
-  TestTube2,
 } from "lucide-react";
 
 const PLAY_STORE_URL =
@@ -25,18 +24,19 @@ export default function DownloadSection() {
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-cyan-200">
-                <TestTube2 size={15} />
-                Android Testing Open
+                <Sparkles size={15} />
+                Now Live on Google Play
               </div>
 
               <h2 className="mt-5 text-4xl font-black tracking-tight text-white md:text-6xl">
-                Test the new RemoteForge smart remote.
+                Download RemoteForge and control more from one app.
               </h2>
 
               <p className="mt-5 max-w-2xl text-lg leading-8 text-white/60">
-                Join the Android testing release to try Roku, Android TV,
-                Google TV, Fire TV setup, Windows Companion, Home Assistant
-                Smart Home Remote, and Matter setup preparation.
+                RemoteForge is now available on Google Play. Control supported
+                Roku devices, Android TV, Google TV, Fire TV setup, Windows
+                Companion, Home Assistant smart-home devices, and Matter setup
+                preparation from one powerful remote app.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -47,7 +47,7 @@ export default function DownloadSection() {
                   className="group inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-500 px-6 text-sm font-black text-black shadow-[0_0_35px_rgba(34,211,238,.35)] transition hover:-translate-y-0.5"
                 >
                   <PlayCircle size={19} />
-                  Join Android Test
+                  Download on Google Play
                   <ArrowRight
                     size={17}
                     className="transition group-hover:translate-x-1"
@@ -64,8 +64,9 @@ export default function DownloadSection() {
               </div>
 
               <p className="mt-4 text-sm font-semibold text-white/45">
-                Android testing is handled through Google Play. Availability may
-                depend on tester access, track access, and region.
+                RemoteForge is available through Google Play. Some advanced
+                features may require Premium. Windows Companion is downloaded
+                separately from the RemoteForge website.
               </p>
             </div>
 
@@ -73,7 +74,7 @@ export default function DownloadSection() {
               <FeatureCard
                 icon={Smartphone}
                 title="Android Remote App"
-                text="Install the Android test build directly from Google Play."
+                text="Download RemoteForge directly from Google Play."
               />
               <FeatureCard
                 icon={Monitor}
@@ -98,7 +99,7 @@ export default function DownloadSection() {
               <FeatureCard
                 icon={Sparkles}
                 title="Premium Smart Home"
-                text="Test premium gates for unlimited devices, smart-home remotes, Matter, rooms, and no ads."
+                text="Unlock unlimited devices, smart-home remotes, Matter features, rooms, and no ads."
               />
             </div>
           </div>

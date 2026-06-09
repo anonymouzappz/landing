@@ -6,49 +6,74 @@ import { adminDb } from "@/src/lib/firebase-admin";
 
 export const runtime = "nodejs";
 
-function normalizeEmail(value: unknown) {
+type SubscriberInterests = {
+  updates: boolean;
+  premium: boolean;
+  companion: boolean;
+  android: boolean;
+};
+
+function normalizeEmail(value: unknown): string {
   return String(value || "").trim().toLowerCase();
 }
 
-function cleanString(value: unknown, max = 200) {
+function cleanString(value: unknown, max = 200): string {
   return String(value || "").trim().slice(0, max);
 }
 
-function isValidEmail(email: string) {
+function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function subscriberDocId(email: string) {
+function subscriberDocId(email: string): string {
   return Buffer.from(email).toString("base64url");
 }
 
-function buildTags(interests: Record<string, boolean>) {
+function readBoolean(value: unknown, defaultValue: boolean): boolean {
+  if (typeof value === "boolean") return value;
+  return defaultValue;
+}
+
+function buildInterests(value: unknown): SubscriberInterests {
+  const raw =
+    value && typeof value === "object"
+      ? (value as Record<string, unknown>)
+      : {};
+
+  return {
+    updates: readBoolean(raw.updates, true),
+    premium: readBoolean(raw.premium, true),
+    companion: readBoolean(raw.companion, true),
+    android: readBoolean(raw.android, true),
+  };
+}
+
+function buildTags(interests: SubscriberInterests): string[] {
   const tags = new Set<string>();
 
   tags.add("remote_forge");
 
-  if (interests.testing) tags.add("testing");
   if (interests.updates) tags.add("updates");
-  if (interests.earlyBird) tags.add("early_bird");
   if (interests.premium) tags.add("premium");
+  if (interests.companion) tags.add("companion");
+  if (interests.android) tags.add("android");
 
   return Array.from(tags);
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as {
+      email?: unknown;
+      name?: unknown;
+      source?: unknown;
+      interests?: unknown;
+    };
 
     const email = normalizeEmail(body.email);
     const name = cleanString(body.name, 120);
     const source = cleanString(body.source || "website", 120);
-
-    const interests = {
-      testing: body.interests?.testing === true,
-      updates: body.interests?.updates !== false,
-      earlyBird: body.interests?.earlyBird !== false,
-      premium: body.interests?.premium !== false,
-    };
+    const interests = buildInterests(body.interests);
 
     if (!isValidEmail(email)) {
       return NextResponse.json(
@@ -60,6 +85,7 @@ export async function POST(req: NextRequest) {
     const ref = adminDb.collection("emailSubscribers").doc(subscriberDocId(email));
     const snap = await ref.get();
 
+    const existing = snap.exists ? snap.data() || {} : {};
     const now = FieldValue.serverTimestamp();
     const tags = buildTags(interests);
 
@@ -69,12 +95,15 @@ export async function POST(req: NextRequest) {
         name,
         source,
         status: "subscribed",
+
         tags,
         interests,
+
         marketingOptIn: true,
-        subscribedAt: snap.exists ? snap.data()?.subscribedAt || now : now,
+        subscribedAt: existing.subscribedAt || now,
         unsubscribedAt: null,
-        createdAt: snap.exists ? snap.data()?.createdAt || now : now,
+
+        createdAt: existing.createdAt || now,
         updatedAt: now,
       },
       { merge: true },
@@ -89,8 +118,10 @@ export async function POST(req: NextRequest) {
     await ref.set(
       {
         welcomeEmailSent: emailResult.sent,
-        welcomeEmailSentAt: emailResult.sent ? FieldValue.serverTimestamp() : null,
-        welcomeEmailError: emailResult.error || "",
+        welcomeEmailSentAt: emailResult.sent
+          ? FieldValue.serverTimestamp()
+          : null,
+        welcomeEmailError: emailResult.sent ? "" : emailResult.error || "",
         welcomeResendEmailId: emailResult.id || "",
         lastEmailAt: emailResult.sent ? FieldValue.serverTimestamp() : null,
         updatedAt: FieldValue.serverTimestamp(),

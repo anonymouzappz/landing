@@ -14,15 +14,26 @@ export default function SubscriberForm({
 }: SubscriberFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [testing, setTesting] = useState(true);
+
   const [updates, setUpdates] = useState(true);
-  const [earlyBird, setEarlyBird] = useState(true);
+  const [premium, setPremium] = useState(true);
+  const [companion, setCompanion] = useState(true);
+
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [ok, setOk] = useState(false);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const cleanName = name.trim();
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail) {
+      setOk(false);
+      setMessage("Enter your email address.");
+      return;
+    }
 
     setBusy(true);
     setMessage("");
@@ -35,19 +46,22 @@ export default function SubscriberForm({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
-          email,
+          name: cleanName,
+          email: cleanEmail,
           source,
           interests: {
-            testing,
             updates,
-            earlyBird,
-            premium: true,
+            premium,
+            companion,
+            android: true,
           },
         }),
       });
 
-      const data = await res.json();
+      const data = (await res.json()) as {
+        message?: string;
+        error?: string;
+      };
 
       if (!res.ok) {
         throw new Error(data.error || "Could not subscribe.");
@@ -90,8 +104,8 @@ export default function SubscriberForm({
             Subscribe for RemoteForge updates
           </h4>
           <p className="mt-1 text-sm font-semibold leading-6 text-white/55">
-            Get Android testing instructions, launch updates, early-bird news,
-            and premium feature announcements.
+            Get app updates, premium feature news, Windows Companion releases,
+            smart-home improvements, and RemoteForge announcements.
           </p>
         </div>
       </div>
@@ -101,6 +115,7 @@ export default function SubscriberForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Name"
+          autoComplete="name"
           className="h-12 rounded-2xl border border-white/10 bg-white/10 px-4 text-sm font-bold text-white outline-none placeholder:text-white/35 focus:border-cyan-300/40"
         />
 
@@ -110,6 +125,7 @@ export default function SubscriberForm({
           required
           type="email"
           placeholder="Email address"
+          autoComplete="email"
           className="h-12 rounded-2xl border border-white/10 bg-white/10 px-4 text-sm font-bold text-white outline-none placeholder:text-white/35 focus:border-cyan-300/40"
         />
 
@@ -127,15 +143,6 @@ export default function SubscriberForm({
         <label className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-bold text-white/65">
           <input
             type="checkbox"
-            checked={testing}
-            onChange={(e) => setTesting(e.target.checked)}
-          />
-          Android testing
-        </label>
-
-        <label className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-bold text-white/65">
-          <input
-            type="checkbox"
             checked={updates}
             onChange={(e) => setUpdates(e.target.checked)}
           />
@@ -145,10 +152,19 @@ export default function SubscriberForm({
         <label className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-bold text-white/65">
           <input
             type="checkbox"
-            checked={earlyBird}
-            onChange={(e) => setEarlyBird(e.target.checked)}
+            checked={premium}
+            onChange={(e) => setPremium(e.target.checked)}
           />
-          Early bird
+          Premium news
+        </label>
+
+        <label className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-bold text-white/65">
+          <input
+            type="checkbox"
+            checked={companion}
+            onChange={(e) => setCompanion(e.target.checked)}
+          />
+          Companion updates
         </label>
       </div>
 

@@ -4,35 +4,59 @@ import { MailPlus, Send } from "lucide-react";
 import { useState } from "react";
 
 const tagOptions = [
-  { label: "Testing", value: "testing" },
   { label: "Product Updates", value: "updates" },
-  { label: "Early Bird", value: "early_bird" },
-  { label: "Premium", value: "premium" },
+  { label: "Premium News", value: "premium" },
+  { label: "Companion Updates", value: "companion" },
+  { label: "Android App", value: "android" },
   { label: "All RemoteForge", value: "remote_forge" },
 ];
 
 export default function AdminSubscriberCampaignForm() {
-  const [tag, setTag] = useState("testing");
+  const [tag, setTag] = useState("updates");
   const [limit, setLimit] = useState(100);
+
   const [subject, setSubject] = useState(
-    "RemoteForge Android Testing Instructions",
+    "RemoteForge is now live on Google Play",
   );
-  const [title, setTitle] = useState("RemoteForge testing instructions");
+
+  const [title, setTitle] = useState("RemoteForge is available now");
+
   const [preheader, setPreheader] = useState(
-    "Here is what to expect next for RemoteForge testing.",
+    "Download RemoteForge on Google Play and stay updated on new features.",
   );
+
   const [htmlBody, setHtmlBody] = useState(
-    "<p>Thanks for subscribing to RemoteForge testing updates.</p><p>We’re preparing instructions for Android testing. You’ll receive the steps, what to test, and how to send feedback.</p>",
+    "<p>Thanks for subscribing to RemoteForge updates.</p><p>RemoteForge is now live on Google Play. You can download the Android app, connect supported devices, and follow along as we continue improving Windows Companion, smart-home controls, premium features, and future automation tools.</p><p>Download RemoteForge from Google Play and watch your email for product updates.</p>",
   );
+
   const [textBody, setTextBody] = useState(
-    "Thanks for subscribing to RemoteForge testing updates. We’re preparing instructions for Android testing. You’ll receive the steps, what to test, and how to send feedback.",
+    "Thanks for subscribing to RemoteForge updates. RemoteForge is now live on Google Play. You can download the Android app, connect supported devices, and follow along as we continue improving Windows Companion, smart-home controls, premium features, and future automation tools.",
   );
+
   const [secret, setSecret] = useState("");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState("");
 
   async function sendCampaign(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const cleanSecret = secret.trim();
+    const cleanSubject = subject.trim();
+    const cleanTitle = title.trim();
+    const cleanPreheader = preheader.trim();
+    const cleanHtmlBody = htmlBody.trim();
+    const cleanTextBody = textBody.trim();
+    const safeLimit = Math.min(Math.max(Number(limit) || 1, 1), 500);
+
+    if (!cleanSecret) {
+      setResult("Enter the admin campaign secret.");
+      return;
+    }
+
+    if (!cleanSubject || !cleanTitle || !cleanHtmlBody || !cleanTextBody) {
+      setResult("Subject, title, HTML body, and text body are required.");
+      return;
+    }
 
     if (!confirm("Send this email campaign now?")) return;
 
@@ -44,27 +68,34 @@ export default function AdminSubscriberCampaignForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-secret": secret,
+          "x-admin-secret": cleanSecret,
         },
         body: JSON.stringify({
           tag,
-          limit,
-          subject,
-          preheader,
-          title,
-          htmlBody,
-          textBody,
+          limit: safeLimit,
+          subject: cleanSubject,
+          preheader: cleanPreheader,
+          title: cleanTitle,
+          htmlBody: cleanHtmlBody,
+          textBody: cleanTextBody,
         }),
       });
 
-      const data = await res.json();
+      const data = (await res.json()) as {
+        targeted?: number;
+        sentCount?: number;
+        failedCount?: number;
+        error?: string;
+      };
 
       if (!res.ok) {
         throw new Error(data.error || "Campaign failed.");
       }
 
       setResult(
-        `Campaign sent. Targeted: ${data.targeted}, Sent: ${data.sentCount}, Failed: ${data.failedCount}`,
+        `Campaign sent. Targeted: ${data.targeted ?? 0}, Sent: ${
+          data.sentCount ?? 0
+        }, Failed: ${data.failedCount ?? 0}`,
       );
     } catch (error) {
       setResult(error instanceof Error ? error.message : "Campaign failed.");
@@ -83,7 +114,7 @@ export default function AdminSubscriberCampaignForm() {
         <div>
           <h2 className="text-2xl font-black">Send Email Campaign</h2>
           <p className="mt-1 text-sm font-semibold leading-6 text-white/45">
-            Sends to subscribers where status is subscribed and selected tag
+            Sends to subscribers where status is subscribed and the selected tag
             matches. Unsubscribed users are skipped.
           </p>
         </div>
