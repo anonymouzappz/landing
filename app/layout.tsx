@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import PublicSupportFabMount from "@/components/PublicSupportFabMount";
@@ -106,7 +106,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const adsensePublisherId = process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID;
+  const rawAdsensePublisherId =
+    process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID?.trim();
+  const adsenseClientId = rawAdsensePublisherId
+    ? rawAdsensePublisherId.startsWith("ca-")
+      ? rawAdsensePublisherId
+      : `ca-${rawAdsensePublisherId}`
+    : "";
 
   return (
     <html
@@ -118,11 +124,11 @@ export default function RootLayout({
 
         <PublicSupportFabMount />
 
-        {adsensePublisherId ? (
+        {adsenseClientId ? (
           <Script
             id="google-adsense"
             async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${adsensePublisherId}`}
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
             crossOrigin="anonymous"
             strategy="afterInteractive"
           />

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,6 +14,7 @@ import {
   Settings,
   ShieldCheck,
   Users,
+  Video,
 } from "lucide-react";
 
 const nav = [
@@ -24,6 +25,7 @@ const nav = [
   { label: "Companion", href: "/admin/companion", icon: Download },
   { label: "Announcements", href: "/admin/announcements", icon: Megaphone },
   { label: "Support", href: "/admin/support", icon: Bell },
+  { label: "Help Center", href: "/admin/help-center", icon: Video },
   { label: "Android Update", href: "/admin/android-update", icon: RefreshCw },
   { label: "Notifications", href: "/admin/notifications", icon: Bell },
   { label: "Settings", href: "/admin/settings", icon: Settings },

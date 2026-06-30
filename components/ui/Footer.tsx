@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   Download,
   ShieldCheck,
@@ -103,7 +103,7 @@ export default function Footer() {
         <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-semibold text-white/45">
-              © 2026 RemoteForge. All rights reserved.
+              Copyright 2026 RemoteForge. All rights reserved.
             </p>
 
             <a
@@ -133,6 +133,12 @@ export default function Footer() {
             >
               Privacy Policy
             </Link>
+            <Link
+              href="/contact"
+              className="rounded-2xl border border-white/5 bg-white/[0.03] px-5 py-3 text-sm font-bold text-white/60 transition hover:border-cyan-300/15 hover:bg-cyan-400/5 hover:text-cyan-200"
+            >
+              Contact
+            </Link>
 
             <Link
               href="/terms"
@@ -154,3 +160,4 @@ export default function Footer() {
     </footer>
   );
 }
+

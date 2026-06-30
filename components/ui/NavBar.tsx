@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -24,6 +24,7 @@ const navItems = [
   { label: "FAQ", href: "#faq" },
   { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function NavBar() {
