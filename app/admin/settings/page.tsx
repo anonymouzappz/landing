@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { adminDb } from "@/src/lib/firebase-admin";
 import { Settings, ShieldCheck, Sparkles } from "lucide-react";
 

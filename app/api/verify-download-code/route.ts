@@ -4,8 +4,6 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const DOWNLOAD_URL = "/downloads/RemoteForgeCompanion.exe";
-
 function normalizeCode(value: unknown) {
   return String(value || "")
     .trim()

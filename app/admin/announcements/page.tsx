@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { adminDb } from "@/src/lib/firebase-admin";
 import { Megaphone } from "lucide-react";
 

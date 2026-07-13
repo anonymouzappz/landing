@@ -1,5 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import { adminDb } from "@/src/lib/firebase-admin";
-import { MonitorSmartphone, Tv, Laptop, Router } from "lucide-react";
+import { Tv, Laptop, Router } from "lucide-react";
 
 type AdminDevice = {
   id: string;

@@ -9,7 +9,6 @@ import {
   Rocket,
   Search,
   Send,
-  ShieldCheck,
   User,
   Users,
 } from "lucide-react";

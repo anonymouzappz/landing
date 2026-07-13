@@ -11,31 +11,51 @@ export async function POST(req: Request) {
 
     const decoded = await adminAuth.verifyIdToken(token, true);
 
+    console.log("ADMIN LOGIN UID:", decoded.uid);
+    console.log("ADMIN_UIDS ENV:", process.env.ADMIN_UIDS);
+
     const allowedAdmins = (process.env.ADMIN_UIDS || "")
       .split(",")
       .map((uid) => uid.trim())
       .filter(Boolean);
 
     if (!allowedAdmins.includes(decoded.uid)) {
-      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+      return NextResponse.json(
+        {
+          error: `Not authorized. UID is ${decoded.uid}`,
+        },
+        { status: 403 },
+      );
     }
 
-    const maxAge = rememberMe
-      ? 60 * 60 * 24 * 30 // 30 days
-      : 60 * 60 * 8; // 8 hours
+  const expiresIn = rememberMe
+  ? 1000 * 60 * 60 * 24 * 14
+  : 1000 * 60 * 60 * 8;
+
+    const sessionCookie = await adminAuth.createSessionCookie(token, {
+      expiresIn,
+    });
 
     const res = NextResponse.json({ ok: true });
 
-    res.cookies.set("rf_admin_token", token, {
+    res.cookies.set("rf_admin_session", sessionCookie, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge,
+      maxAge: Math.floor(expiresIn / 1000),
     });
 
     return res;
-  } catch {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  } catch (error) {
+    console.error("ADMIN SESSION ERROR:", error);
+
+    const message =
+      error instanceof Error ? error.message : "Invalid admin login";
+
+    return NextResponse.json(
+      { error: message },
+      { status: 401 },
+    );
   }
 }

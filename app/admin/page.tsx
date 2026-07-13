@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Crown, MonitorSmartphone, Users, Wifi } from "lucide-react";
 import { adminDb } from "@/src/lib/firebase-admin";
 import AdminStatCard from "@/components/admin/AdminStatCard";

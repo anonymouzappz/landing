@@ -1,18 +1,8 @@
-﻿import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import PublicSupportFabMount from "@/components/PublicSupportFabMount";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const siteUrl = "https://remoteforge.net";
 const ogImage = "/images/og-remoteforge.jpg";
@@ -117,7 +107,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
+      className="h-full scroll-smooth antialiased"
     >
       <body className="min-h-full bg-[#040816] text-white selection:bg-cyan-300 selection:text-black">
         {children}

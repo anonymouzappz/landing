@@ -6,7 +6,6 @@ import {
   CreditCard,
   FileText,
   Globe,
-  LockKeyhole,
   Monitor,
   ShieldCheck,
   UserCheck,

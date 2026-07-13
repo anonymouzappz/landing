@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import AndroidUpdateForm from "@/components/admin/AndroidUpdateForm";
 import { adminDb } from "@/src/lib/firebase-admin";
 

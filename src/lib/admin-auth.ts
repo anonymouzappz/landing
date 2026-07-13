@@ -1,14 +1,16 @@
+import "server-only";
+
 import { cookies } from "next/headers";
 import { adminAuth } from "@/src/lib/firebase-admin";
 
 export async function getAdminUser() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("rf_admin_token")?.value;
-
-  if (!token) return null;
-
   try {
-    const decoded = await adminAuth.verifyIdToken(token);
+    const cookieStore = await cookies();
+    const session = cookieStore.get("rf_admin_session")?.value;
+
+    if (!session) return null;
+
+    const decoded = await adminAuth.verifySessionCookie(session, true);
 
     const allowedAdmins = (process.env.ADMIN_UIDS || "")
       .split(",")
@@ -20,7 +22,8 @@ export async function getAdminUser() {
     }
 
     return decoded;
-  } catch {
+  } catch (error) {
+    console.error("getAdminUser failed:", error);
     return null;
   }
 }

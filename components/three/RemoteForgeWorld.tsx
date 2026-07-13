@@ -4,7 +4,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   Environment,
   Float,
-  Html,
   OrbitControls,
   Sparkles,
   Stars,
@@ -16,10 +15,14 @@ import * as THREE from "three";
 const TV_TARGET = new THREE.Vector3(1.75, 0.35, -0.25);
 
 function TVScreenContent() {
-  const texture = useTexture("/images/remoteforge-tv-banner.jpg");
-
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 16;
+  const sourceTexture = useTexture("/images/remoteforge-tv-banner.jpg");
+  const texture = useMemo(() => {
+    const cloned = sourceTexture.clone();
+    cloned.colorSpace = THREE.SRGBColorSpace;
+    cloned.anisotropy = 16;
+    cloned.needsUpdate = true;
+    return cloned;
+  }, [sourceTexture]);
 
   return (
     <group position={[0, 0, 0.235]}>

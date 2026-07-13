@@ -19,6 +19,14 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   isolation: isolate;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   background:
     radial-gradient(circle at 18% 12%, rgba(34, 211, 238, 0.16), transparent 32%),
     radial-gradient(circle at 82% 18%, rgba(217, 70, 239, 0.14), transparent 34%),
@@ -53,6 +61,18 @@ body::after {
   mix-blend-mode: screen;
 }
 
+
+code,
+kbd,
+pre,
+samp {
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    Menlo,
+    monospace;
+}
 ::selection {
   background: var(--rf-cyan);
   color: #02040b;

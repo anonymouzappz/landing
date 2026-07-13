@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import AdminAvatar from "@/components/admin/AdminAvatar";
 import AdminUserToggle from "@/components/admin/AdminUserToggle";
 import { adminDb } from "@/src/lib/firebase-admin";
